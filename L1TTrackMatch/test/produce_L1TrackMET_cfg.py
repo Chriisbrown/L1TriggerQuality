@@ -36,27 +36,21 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 process.TFileService = cms.Service("TFileService", fileName = cms.string('TRACKMET.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
-process.load("L1Trigger.TrackFindingTracklet.L1HybridEmulationTracks_cff")
-process.TTTracksEmulation = cms.Path(process.L1HybridTracks)
-process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociators)
+process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
+process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
 NHELIXPAR = 4
-L1TRK_NAME  = "TTTracksFromTrackletEmulation"
+L1TRK_NAME  = "TTTracksFromTrackletEmulationWithQuality"
 L1TRK_LABEL = "Level1TTTracks"
-L1TRK_CLASSLABEL ="Level1ClassTTTracks"
-L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigis"
+L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigisWithQuality"
 
-process.load("L1Trigger.TrackQuality.Classifier_cff")
-process.TrackClassifier.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.TrackClassifier.Algorithm = cms.string("NN")
-process.pTrackClass = cms.Path( process.TrackClassifier)
 
 process.load("L1Trigger.VertexFinder.VertexProducer_cff")
-process.VertexProducer.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_CLASSLABEL) 
+process.VertexProducer.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
-process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_CLASSLABEL) 
+process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
 process.out = cms.OutputModule( "PoolOutputModule",
@@ -66,7 +60,6 @@ process.out = cms.OutputModule( "PoolOutputModule",
 process.FEVToutput_step = cms.EndPath(process.out)
 process.schedule = cms.Schedule(process.TTTracksEmulation,
                                 process.TTTracksEmulationWithTruth,
-                                process.pTrackClass,
                                 process.pTkPrimaryVertex,
                                 process.pL1TrackerEtMiss,
                                 process.FEVToutput_step)
