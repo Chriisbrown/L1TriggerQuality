@@ -192,6 +192,9 @@ private:
   edm::FileInPath DTCLinkLayerDiskFile;
 
   
+  bool quality_;
+  Quality Quality_model;
+
   int failscenario_;
   StubKiller* my_stubkiller;
 
@@ -449,6 +452,29 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig) :
       sectors[i]->addWire(mem,procin,procout);
     }
 
+  }
+
+  quality_ = iConfig.getParameter<bool>("Quality");
+  if (quality_){
+    string Algorithm =  iConfig.getParameter<string>("Quality_Algorithm");
+    if (Algorithm == "Cut"){
+      Quality_model = Quality(Algorithm,
+                             (float)iConfig.getParameter<double>("maxZ0"),
+                             (float)iConfig.getParameter<double>("maxEta"),
+                             (float)iConfig.getParameter<double>("chi2dofMax"),
+                             (float)iConfig.getParameter<double>("bendchi2Max"),
+                             (float)iConfig.getParameter<double>("minPt"),
+                             iConfig.getParameter<int>("nStubsmin"));
+    }
+
+    else{
+      Quality_model = Quality(Algorithm,
+                              edm::FileInPath(iConfig.getParameter<string>("ONNXmodel")).fullPath(),
+                              iConfig.getParameter<string>("ONNXInputName"),
+                              iConfig.getParameter<string>("ONNXOutputName"),
+                              iConfig.getParameter<vector<string>>("in_features"));
+    }
+     
   }
 
 
@@ -1033,6 +1059,10 @@ void L1FPGATrackProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSe
     // pt consistency
     float ptconsistency = StubPtConsistency::getConsistency(aTrack, theTrackerGeom, tTopo,  mMagneticFieldStrength, nHelixPar_);
     aTrack.setStubPtConsistency(ptconsistency);
+
+    if (quality_) {
+      Quality_model.Prediction(aTrack);
+    }
 
 
     // set TTTrack word
