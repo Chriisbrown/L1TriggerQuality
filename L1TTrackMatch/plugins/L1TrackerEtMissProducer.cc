@@ -155,6 +155,9 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
       }
     }
 
+    float quality = trackIter->MVA1();
+    cout << quality << endl;
+
     if (nstubs < nStubsmin) continue;
     if (nPS < nStubsPSmin) continue;
 
