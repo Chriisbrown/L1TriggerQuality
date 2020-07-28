@@ -21,6 +21,7 @@
 <use   name="FWCore/MessageLogger"/>
 <use   name="DataFormats/L1Trigger"/>
 <use   name="DataFormats/HepMCCandidate"/>
+<use name="PhysicsTools/ONNXRuntime"/>
 <use   name="SimDataFormats/Vertex"/>
 <use   name="SimDataFormats/TrackingHit"/>
 <use   name="SimDataFormats/GeneratorProducts"/>
