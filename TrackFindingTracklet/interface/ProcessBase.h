@@ -1,48 +1,55 @@
-#ifndef L1Trigger_TrackFindingTracklet_interface_ProcessBase_h
-#define L1Trigger_TrackFindingTracklet_interface_ProcessBase_h
+//Base class for processing modules
+#ifndef PROCESSBASE_H
+#define PROCESSBASE_H
 
-#include <string>
+using namespace std;
 
-namespace trklet {
+#include "Stub.h"
 
-  class MemoryBase;
-  class Settings;
-  class Globals;
+class ProcessBase{
 
-  class ProcessBase {
-  public:
-    ProcessBase(std::string name, Settings const& settings, Globals* global, unsigned int iSector);
+public:
 
-    virtual ~ProcessBase() = default;
+  ProcessBase(string name, unsigned int iSector){
+    name_=name;
+    iSector_=iSector;
+    extended_=hourglassExtended;
+    nHelixPar_=nHelixPar;
+  }
 
-    // Add wire from pin "output" or "input" this proc module to memory instance "memory".
-    virtual void addOutput(MemoryBase* memory, std::string output) = 0;
-    virtual void addInput(MemoryBase* memory, std::string input) = 0;
+  virtual ~ProcessBase() { } 
 
-    std::string const& getName() const { return name_; }
+  // Add wire from pin "output" or "input" this proc module to memory instance "memory".
 
-    unsigned int nbits(unsigned int power);
+  virtual void addOutput(MemoryBase* memory,string output)=0;
 
-    //method sets the layer and disk based on the name. pos is the position in the memory name where the layer or disk is specified
-    void initLayerDisk(unsigned int pos, int& layer, int& disk);
-    void initLayerDisk(unsigned int pos, int& layer, int& disk, int& layerdisk);
+  virtual void addInput(MemoryBase* memory,string input)=0;
 
-    unsigned int initLayerDisk(unsigned int pos);
+  string getName() const {return name_;}
 
-    //This function processes the name of a TE module to determine the layerdisks and iseed
-    void initLayerDisksandISeed(unsigned int& layerdisk1, unsigned int& layerdisk2, unsigned int& iSeed);
+  unsigned int nbits(unsigned int power) {
 
-    unsigned int getISeed(std::string name);
+    if (power==2) return 1;
+    if (power==4) return 2;
+    if (power==8) return 3;
+    if (power==16) return 4;
+    if (power==32) return 5;
 
-  protected:
-    std::string name_;
-    unsigned int iSector_;
+    cout << "nbits: power = "<<power<<endl;
+    assert(0);
 
-    double phimin_;
-    double phimax_;
+    return -1;
+    
+  }
 
-    Settings const& settings_;
-    Globals* globals_;
-  };
-};  // namespace trklet
+
+protected:
+
+  string name_;
+  unsigned int iSector_;
+  bool extended_;
+  unsigned int nHelixPar_;
+
+};
+
 #endif

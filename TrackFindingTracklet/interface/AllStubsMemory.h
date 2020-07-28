@@ -1,37 +1,71 @@
-#ifndef L1Trigger_TrackFindingTracklet_interface_AllStubsMemory_h
-#define L1Trigger_TrackFindingTracklet_interface_AllStubsMemory_h
+// This class holds all the stubs in a DTC region for a give layer
+#ifndef ALLSTUBSMEMORY_H
+#define ALLSTUBSMEMORY_H
 
-#include "L1Trigger/TrackFindingTracklet/interface/MemoryBase.h"
+#include "L1TStub.h"
+#include "Stub.h"
+#include "MemoryBase.h"
 
-#include <utility>
-#include <string>
-#include <vector>
+#include <ctype.h>
 
-namespace trklet {
+using namespace std;
 
-  class Settings;
-  class Stub;
-  class L1TStub;
+class AllStubsMemory:public MemoryBase{
 
-  class AllStubsMemory : public MemoryBase {
-  public:
-    AllStubsMemory(std::string name, Settings const& settings, unsigned int iSector);
+public:
 
-    ~AllStubsMemory() override = default;
+  AllStubsMemory(string name, unsigned int iSector, 
+	       double phimin, double phimax):
+    MemoryBase(name,iSector){
+    phimin_=phimin;
+    phimax_=phimax;
 
-    void addStub(const Stub* stub) { stubs_.push_back(stub); }
+    //set the layer or disk that the memory is in
+    initLayerDisk(3,layer_,disk_);
 
-    unsigned int nStubs() const { return stubs_.size(); }
+    assert(name.substr(5,3)=="PHI");
+  }
 
-    const Stub* getStub(unsigned int i) const { return stubs_[i]; }
+  void addStub(std::pair<Stub*,L1TStub*> stub) {
+    stubs_.push_back(stub);
+  }
 
-    void clean() override { stubs_.clear(); }
+  unsigned int nStubs() const {return stubs_.size();}
 
-    void writeStubs(bool first);
+  Stub* getFPGAStub(unsigned int i) const {return stubs_[i].first;}
+  L1TStub* getL1TStub(unsigned int i) const {return stubs_[i].second;}
+  std::pair<Stub*,L1TStub*> getStub(unsigned int i) const {return stubs_[i];}
 
-  private:
-    std::vector<const Stub*> stubs_;
-  };
+  void clean() {
+    stubs_.clear();
+  }
 
-};  // namespace trklet
+  void writeStubs(bool first) {
+
+    openFile(first,"../data/MemPrints/Stubs/AllStubs_");
+    
+    for (unsigned int j=0;j<stubs_.size();j++){
+      string stub=stubs_[j].first->str();
+      out_ << "0x";
+      if (j<16) out_ <<"0";
+      out_ << hex << j << dec ;
+      out_ <<" "<<stub << " " <<hexFormat(stub)<<endl;
+    }
+    out_.close();
+  }
+
+  int layer() const { return layer_;}
+  int disk() const { return disk_;}
+
+private:
+
+  double phimin_;
+  double phimax_;
+  std::vector<std::pair<Stub*,L1TStub*> > stubs_;
+
+  int layer_;
+  int disk_;
+
+};
+
 #endif

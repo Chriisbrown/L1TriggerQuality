@@ -1,46 +1,102 @@
-#ifndef L1Trigger_TrackFindingTracklet_interface_VMStubTE_h
-#define L1Trigger_TrackFindingTracklet_interface_VMStubTE_h
+#ifndef VMSTUBTE_H
+#define VMSTUBTE_H
 
 #include <iostream>
 #include <fstream>
-#include <cassert>
-#include <cmath>
+#include <assert.h>
+#include <math.h>
 #include <vector>
 
-#include "L1Trigger/TrackFindingTracklet/interface/Stub.h"
-#include "L1Trigger/TrackFindingTracklet/interface/FPGAWord.h"
+#include "FPGAWord.h"
+#include "Util.h"
+#include "Constants.h"
+#include "Stub.h"
+#include "L1TStub.h"
 
-namespace trklet {
+using namespace std;
 
-  class VMStubTE {
-  public:
-    VMStubTE() {}
+class VMStubTE{
 
-    VMStubTE(const Stub* stub, FPGAWord finephi, FPGAWord bend, FPGAWord vmbits, FPGAWord allstubindex);
+public:
 
-    ~VMStubTE() = default;
+  VMStubTE() {}
+  
 
-    const FPGAWord& finephi() const { return finephi_; }
+  VMStubTE(std::pair<Stub*, L1TStub*> stub, FPGAWord finephi, FPGAWord finerz, FPGAWord bend, FPGAWord vmbits, FPGAWord allstubindex) {
+    stub_=stub;
+    finephi_=finephi;
+    finerz_=finerz;
+    bend_=bend;
+    vmbits_=vmbits;
+    allStubIndex_=allstubindex;
+  }
 
-    const FPGAWord& bend() const { return bend_; }
+ 
+  ~VMStubTE() {
 
-    const FPGAWord& vmbits() const { return vmbits_; }
+  }
 
-    const Stub* stub() const { return stub_; }
+  FPGAWord finephi() const {
+    return finephi_;
+  }
+  
+  FPGAWord finerz() const {
+    return finerz_;
+  }
 
-    bool isPSmodule() const { return stub_->isPSmodule(); }
+  FPGAWord bend() const {
+    return bend_;
+  }
+  
+  FPGAWord vmbits() const {
+    return vmbits_;
+  }
 
-    const FPGAWord& stubindex() const { return allStubIndex_; }
+  std::pair<Stub*, L1TStub*> stub() const {
+    return stub_;
+  }
 
-    //return binary string for memory printout
-    std::string str() const;
+  bool isPSmodule() const {
+    return stub_.first->isPSmodule();
+  }
 
-  private:
-    FPGAWord finephi_;
-    FPGAWord bend_;
-    FPGAWord vmbits_;
-    FPGAWord allStubIndex_;
-    const Stub* stub_;
-  };
-};  // namespace trklet
+  FPGAWord stubindex() const {
+    return allStubIndex_;
+  }
+
+
+  //return binary string for memory printout
+  std::string str() const {
+    
+    string stub=allStubIndex_.str();
+    stub+="|";
+    stub+=bend_.str();
+    stub+="|";
+    stub+=finephi_.str();
+    stub+="|";
+    stub+=finerz_.str();
+    stub+="|";
+    stub+=vmbits_.str();
+
+    return stub;
+    
+  }
+
+  
+private:
+
+  FPGAWord finephi_;
+  FPGAWord finerz_;
+  FPGAWord bend_;
+  FPGAWord vmbits_;
+  FPGAWord allStubIndex_;
+  std::pair<Stub*, L1TStub*> stub_;
+
+};
+
+
+
 #endif
+
+
+

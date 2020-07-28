@@ -1,44 +1,118 @@
-#ifndef L1Trigger_TrackFindingTracklet_interface_VMRouterPhiCorrTable_h
-#define L1Trigger_TrackFindingTracklet_interface_VMRouterPhiCorrTable_h
+#ifndef VMROUTERPHICORRTABLE_H
+#define VMROUTERPHICORRTABLE_H
 
-#include "L1Trigger/TrackFindingTracklet/interface/TETableBase.h"
-
+#include "TETableBase.h"
 #include <iostream>
 #include <fstream>
-#include <cassert>
-#include <cmath>
+#include <assert.h>
+#include <math.h>
 #include <vector>
 
-namespace trklet {
 
-  class Settings;
+using namespace std;
 
-  class VMRouterPhiCorrTable : public TETableBase {
-  public:
-    VMRouterPhiCorrTable(Settings const& settings);
+class VMRouterPhiCorrTable: public TETableBase{
 
-    ~VMRouterPhiCorrTable() override = default;
+public:
 
-    void init(int layer, int bendbits, int rbits);
+  VMRouterPhiCorrTable() {
+    nbits_ = 14; 
+  }
 
-    int getphiCorrValue(int ibend, int irbin) const;
+  ~VMRouterPhiCorrTable() {
 
-    int lookupPhiCorr(int ibend, int rbin);
+  }
 
-  private:
-    double rmean_;
-    double rmin_;
-    double rmax_;
 
-    double dr_;
+  void init(int layer,
+	    int bendbits,
+	    int rbits
+	    ) {
 
-    int bendbits_;
-    int rbits_;
+    assert(bendbits==3||bendbits==4); 
+    
+    layer_=layer;
+    bendbits_=bendbits;
+    rbits_=rbits;
 
-    int bendbins_;
-    int rbins_;
+    rbins_=(1<<rbits);
+    rmin_=rmean[layer-1]-drmax;
+    rmax_=rmean[layer-1]+drmax;
+    dr_=2*drmax/rbins_;
 
-    int layer_;
-  };
-};  // namespace trklet
+    bendbins_=(1<<bendbits);
+ 
+    rmean_=rmean[layer-1];
+
+    for (int ibend=0;ibend<bendbins_;ibend++) {
+      for (int irbin=0;irbin<rbins_;irbin++) {
+	int value=getphiCorrValue(ibend,irbin);
+	table_.push_back(value);
+      }
+    }
+
+    if (writeVMTables) {
+      writeVMTable("VMPhiCorrL"+std::to_string(layer_)+".txt", false);
+    }
+
+    
+  }
+
+  int getphiCorrValue(int ibend, int irbin){
+
+    double bend=Stub::benddecode(ibend,layer_<=3);
+
+    //for the rbin - calculate the distance to the nominal layer radius
+    double Delta=(irbin+0.5)*dr_-drmax;
+
+    //calculate the phi correction - this is a somewhat approximate formula
+    double dphi=(Delta/0.18)*(bend*0.009)/rmean_;
+
+    int idphi=0;
+      
+    if (layer_<=3) {
+      idphi=dphi/kphi;
+    } else {
+      idphi=dphi/kphi1;
+    }
+
+    return idphi;
+    
+  }
+  
+  int lookupPhiCorr(int ibend, int rbin) {
+
+    int index=ibend*rbins_+rbin;
+    assert(index<(int)table_.size());
+    return table_[index];
+    
+  }
+
+  
+private:
+
+
+  double rmean_;
+
+  double rmin_;
+  double rmax_;
+ 
+  double dr_;
+  
+  int bendbits_;
+  int rbits_;
+
+  int bendbins_;
+  int rbins_;
+
+  int layer_;
+  
+  
+};
+
+
+
 #endif
+
+
+

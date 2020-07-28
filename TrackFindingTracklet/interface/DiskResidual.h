@@ -1,112 +1,147 @@
-#ifndef L1Trigger_TrackFindingTracklet_interface_DiskResidual_h
-#define L1Trigger_TrackFindingTracklet_interface_DiskResidual_h
+//Base class for processing modules
+#ifndef DISKRESIDUAL_H
+#define DISKRESIDUAL_H
 
-#include "L1Trigger/TrackFindingTracklet/interface/FPGAWord.h"
+using namespace std;
 
-#include <cassert>
+class DiskResidual{
 
-namespace trklet {
+public:
 
-  class Settings;
-  class Stub;
+  DiskResidual(){
+    valid_=false;
+  }
 
-  class DiskResidual {
-  public:
-    DiskResidual() { valid_ = false; }
+  void init(int disk,
+	    int iphiresid,
+	    int irresid,
+	    int istubid,
+	    double phiresid,
+	    double rresid,
+	    double phiresidapprox,
+	    double rresidapprox,
+	    double zstub,
+	    double alpha,
+	    FPGAWord ialpha,
+	    std::pair<Stub*,L1TStub*> stubptrs) {
+    
+    assert(abs(disk)>=1);
+    assert(abs(disk)<=5);
 
-    ~DiskResidual() = default;
+    //cout << "Initiating projection to disk = "<<projdisk<< " at radius = "<<rproj<<endl;
+    
+    if (valid_&&(fabs(iphiresid)>fabs(fpgaphiresid_.value()))) return;
+    
+    valid_=true;
 
-    void init(Settings const& settings,
-              int disk,
-              int iphiresid,
-              int irresid,
-              int istubid,
-              double phiresid,
-              double rresid,
-              double phiresidapprox,
-              double rresidapprox,
-              double zstub,
-              double alpha,
-              FPGAWord ialpha,
-              const Stub* stubptr);
+    disk_=disk;
 
-    bool valid() const { return valid_; }
+    fpgaphiresid_.set(iphiresid,phiresidbits,false,__LINE__,__FILE__);
+    fpgarresid_.set(irresid,rresidbits,false,__LINE__,__FILE__);
+    assert(istubid>=0);
+    unsigned int nbitsstubid=10;
+    fpgastubid_.set(istubid,nbitsstubid,true,__LINE__,__FILE__);
+    assert(!fpgaphiresid_.atExtreme());
 
-    const FPGAWord& fpgaphiresid() const {
-      assert(valid_);
-      return fpgaphiresid_;
-    };
+    phiresid_=phiresid;
+    rresid_=rresid;
+  
+    phiresidapprox_=phiresidapprox;
+    rresidapprox_=rresidapprox;
 
-    const FPGAWord& fpgarresid() const {
-      assert(valid_);
-      return fpgarresid_;
-    };
+    zstub_=zstub;
+    alpha_=alpha;
+    ialpha_=ialpha;
+    stubptrs_=stubptrs;
+    
+  }
 
-    const FPGAWord& fpgastubid() const {
-      assert(valid_);
-      return fpgastubid_;
-    };
+  virtual ~DiskResidual(){}
 
-    double phiresid() const {
-      assert(valid_);
-      return phiresid_;
-    };
-
-    double rresid() const {
-      assert(valid_);
-      return rresid_;
-    };
-
-    double phiresidapprox() const {
-      assert(valid_);
-      return phiresidapprox_;
-    };
-
-    double rresidapprox() const {
-      assert(valid_);
-      return rresidapprox_;
-    };
-
-    double zstub() const {
-      assert(valid_);
-      return zstub_;
-    };
-
-    double alpha() const {
-      assert(valid_);
-      return alpha_;
-    };
-
-    const FPGAWord& ialpha() const {
-      assert(valid_);
-      return ialpha_;
-    };
-
-    const Stub* stubptr() const {
-      assert(valid_);
-      return stubptr_;
-    };
-
-  protected:
-    bool valid_;
-
-    int disk_;
-
-    FPGAWord fpgaphiresid_;
-    FPGAWord fpgarresid_;
-    FPGAWord fpgastubid_;
-
-    double phiresid_;
-    double rresid_;
-
-    double phiresidapprox_;
-    double rresidapprox_;
-
-    double zstub_;
-    double alpha_;
-    FPGAWord ialpha_;
-    const Stub* stubptr_;
+  bool valid() const {
+    return valid_;
+  }
+  
+  FPGAWord fpgaphiresid() const {
+    assert(valid_);
+    return fpgaphiresid_;
   };
 
-};  // namespace trklet
+  FPGAWord fpgarresid() const {
+    assert(valid_);
+    return fpgarresid_;
+  };
+  
+  FPGAWord fpgastubid() const {
+    assert(valid_);
+    return fpgastubid_;
+  };
+
+  
+  
+  double phiresid() const {
+    assert(valid_);
+    return phiresid_;
+  };
+
+  double rresid() const {
+    assert(valid_);
+    return rresid_;
+  };
+
+
+  double phiresidapprox() const {
+    assert(valid_);
+    return phiresidapprox_;
+  };
+
+  double rresidapprox() const {
+    assert(valid_);
+    return rresidapprox_;
+  };
+  
+  double zstub()const {
+    assert(valid_);
+    return zstub_;
+  };
+
+  double alpha() const {
+    assert(valid_);
+    return alpha_;
+  };
+
+  FPGAWord ialpha() const {
+    assert(valid_);
+    return ialpha_;
+  };
+  
+  std::pair<Stub*,L1TStub*> stubptrs() const {
+    assert(valid_);
+    return stubptrs_;
+  };
+  
+
+protected:
+
+  bool valid_;
+
+  int disk_;
+
+  FPGAWord fpgaphiresid_;
+  FPGAWord fpgarresid_;
+  FPGAWord fpgastubid_;
+
+  double phiresid_;
+  double rresid_;
+  
+  double phiresidapprox_;
+  double rresidapprox_;
+
+  double zstub_;
+  double alpha_;
+  FPGAWord ialpha_;
+  std::pair<Stub*,L1TStub*> stubptrs_;
+  
+};
+
 #endif
