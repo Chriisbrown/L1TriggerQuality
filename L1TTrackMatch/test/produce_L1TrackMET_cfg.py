@@ -55,9 +55,14 @@ process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
-process.L1TrackerETMiss.MVAThreshold = cms.double(0.5)
+process.L1TrackerEtMiss.MVAThreshold = cms.double(0.3)
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
+
+process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
+process.L1TrackerEtMiss.MVAThreshold = cms.double(0.0)
+process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.pL1TrackerEtMissnocut =cms.Path(process.L1TrackerEtMiss)
 
 process.out = cms.OutputModule( "PoolOutputModule",
                                 fastCloning = cms.untracked.bool( False ),
@@ -68,4 +73,5 @@ process.schedule = cms.Schedule(process.TTTracksEmulation,
                                 process.TTTracksEmulationWithTruth,
                                 process.pTkPrimaryVertex,
                                 process.pL1TrackerEtMiss,
+                                process.pL1TrackerEtMissnocut,
                                 process.FEVToutput_step)
