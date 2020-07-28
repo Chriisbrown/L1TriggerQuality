@@ -46,8 +46,8 @@ L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigis"
 
 
 
-process.load("L1Trigger.L1TTrackMatch.L1TkPrimaryVertexProducer_cfi")
-process.pTkPrimaryVertex = cms.Path( process.L1TkPrimaryVertex )
+process.load("L1Trigger.VertexFinder.VertexProducer_cff")
+process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
