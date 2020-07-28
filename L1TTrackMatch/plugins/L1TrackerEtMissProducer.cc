@@ -54,6 +54,8 @@ private:
   int HighPtTracks; // saturate or truncate
   float Threshold;
 
+  std::string outputname;
+
   const edm::EDGetTokenT< VertexCollection > pvToken;
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
 };
@@ -76,8 +78,9 @@ trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.g
   maxEta = (float)iConfig.getParameter<double>("maxEta");
   HighPtTracks = iConfig.getParameter<int>("HighPtTracks");
   Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
+  outputname = iConfig.getParameter<std::string>("L1METTag");
 
-  produces<TkEtMissCollection>("trkMET");
+  produces<TkEtMissCollection>(outputname);
 }
 
 //////////////
@@ -209,7 +212,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     etTot_PU,
     ibx ) );
 
-  iEvent.put( std::move(METCollection), "trkMET");
+  iEvent.put( std::move(METCollection), outputname);
 } // end producer
 
 void L1TrackerEtMissProducer::beginJob() {

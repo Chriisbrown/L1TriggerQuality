@@ -57,11 +57,13 @@ process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
 process.L1TrackerEtMiss.MVAThreshold = cms.double(0.3)
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerEtMiss.L1METTag = cms.string("TrackMET")
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
 process.L1TrackerEtMiss.MVAThreshold = cms.double(0.0)
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerEtMiss.L1METTag = cms.string("TrackMETnoCut")
 process.pL1TrackerEtMissnocut =cms.Path(process.L1TrackerEtMiss)
 
 process.out = cms.OutputModule( "PoolOutputModule",
