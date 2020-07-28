@@ -41,7 +41,6 @@ process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracksWithQualit
 process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
 process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
 
-process.L1HybridTracksWithQuality.Quality_Algorithm("NN")
 
 NHELIXPAR = 4
 L1TRK_NAME  = "TTTracksFromTrackletEmulationWithQuality"
@@ -56,6 +55,7 @@ process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
+process.L1TrackerETMiss.MVAThreshold = cms.double(0.5)
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 

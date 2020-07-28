@@ -183,7 +183,7 @@ void Quality::Prediction(TTTrack < Ref_Phase2TrackerDigi_ > &aTrack) {
         if (trk_pt >= this->minPt_ && 
             abs(trk_z0) < this->maxZ0_ && 
             abs(trk_eta) < this->maxEta_ && 
-            (trk_chi2 / (2*nStubs-4)) < chi2dofMax && 
+            (trk_chi2 / (2*nStubs-4)) < chi2dofMax_ && 
             trk_bend_chi2 < this->bendchi2Max_ && 
             nStubs >= this->nStubsmin_) classification = 1.0;
             // Classification updated to 1 if conditions are met

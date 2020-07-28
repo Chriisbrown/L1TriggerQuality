@@ -52,6 +52,7 @@ private:
   int nStubsPSmin;  // minimum number of stubs in PS modules
   float maxPt;	    // in GeV
   int HighPtTracks; // saturate or truncate
+  float Threshold;
 
   const edm::EDGetTokenT< VertexCollection > pvToken;
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
@@ -74,6 +75,7 @@ trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.g
   maxPt = (float)iConfig.getParameter<double>("maxPt");
   maxEta = (float)iConfig.getParameter<double>("maxEta");
   HighPtTracks = iConfig.getParameter<int>("HighPtTracks");
+  Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
 
   produces<TkEtMissCollection>("trkMET");
 }
@@ -124,6 +126,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   float zVTX = L1VertexHandle->begin()->z0();
 
   for (trackIter = L1TTTrackHandle->begin(); trackIter != L1TTTrackHandle->end(); ++trackIter) {
+    /*
     float pt = trackIter->momentum().perp();
     float phi = trackIter->momentum().phi();
     float eta = trackIter->momentum().eta();
@@ -160,8 +163,16 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     if (nstubs < nStubsmin) continue;
     if (nPS < nStubsPSmin) continue;
 
+    */
+
+    if ( maxPt > 0 && pt > maxPt)  {
+      if (HighPtTracks == 0)  continue;	// ignore these very high PT tracks: truncate
+      if (HighPtTracks == 1)  pt = maxPt; // saturate
+    }
+
     float quality = trackIter->trkMVA1();
-    cout << quality << endl;
+    if (quality < Threshold) continue;
+    
 
     // construct deltaZ cut to be based on track eta
     if      ( fabs(eta)>=0   &&  fabs(eta)<0.7)  DeltaZ = 0.4;
