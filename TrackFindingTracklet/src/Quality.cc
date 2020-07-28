@@ -171,20 +171,19 @@ void Quality::Prediction(TTTrack < Ref_Phase2TrackerDigi_ > &aTrack) {
 
         float trk_pt = aTrack.momentum().perp();
         float trk_bend_chi2 = aTrack.stubPtConsistency();
-        float trk_z0 = aTrack.z0();
+        float trk_z0 = aTrack.POCA().z();
         float trk_eta = aTrack.momentum().eta();
         float trk_chi2 = aTrack.chi2();
         const auto& stubRefs = aTrack.getStubRefs();
-        int nStubs = stubRefs.size();
+        int nStubs = (int) stubRefs.size();
 
-        float chi2dofMax =  (this->chi2dofMax_) / (2*nStubs-4);
 
         float classification = 0.0; // Default classification is 0
 
         if (trk_pt >= this->minPt_ && 
             abs(trk_z0) < this->maxZ0_ && 
             abs(trk_eta) < this->maxEta_ && 
-            trk_chi2 < chi2dofMax && 
+            (trk_chi2 / (2*nStubs-4)) < chi2dofMax && 
             trk_bend_chi2 < this->bendchi2Max_ && 
             nStubs >= this->nStubsmin_) classification = 1.0;
             // Classification updated to 1 if conditions are met

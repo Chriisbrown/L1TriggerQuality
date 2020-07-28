@@ -155,11 +155,13 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
       }
     }
 
-    float quality = trackIter->trkMVA1();
-    cout << quality << endl;
+    
 
     if (nstubs < nStubsmin) continue;
     if (nPS < nStubsPSmin) continue;
+
+    float quality = trackIter->trkMVA1();
+    cout << quality << endl;
 
     // construct deltaZ cut to be based on track eta
     if      ( fabs(eta)>=0   &&  fabs(eta)<0.7)  DeltaZ = 0.4;

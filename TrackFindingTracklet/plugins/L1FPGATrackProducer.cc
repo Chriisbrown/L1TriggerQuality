@@ -108,6 +108,8 @@
 
 #include "L1Trigger/TrackFindingTracklet/interface/StubKiller.h"
 
+#include "L1Trigger/TrackFindingTracklet/interface/Quality.h"
+
 // L1Trk HLS end-of-job bit range checks etc.
 #ifdef USEHYBRID
 #ifdef USE_HLS

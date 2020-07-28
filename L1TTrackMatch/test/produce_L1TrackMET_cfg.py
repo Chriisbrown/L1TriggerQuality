@@ -33,7 +33,7 @@ inputMC = ['/store/relval/CMSSW_11_1_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU25ns
 
 process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inputMC))
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('TRACKMET.root'), closeFileFast = cms.untracked.bool(True))
+
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 
