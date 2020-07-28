@@ -36,8 +36,13 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 process.TFileService = cms.Service("TFileService", fileName = cms.string('TRACKMET.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
+
+process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracksWithQuality_cff")
 process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
 process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
+
+process.L1HybridTracksWithQuality.Quality_Algorithm("NN")
+
 NHELIXPAR = 4
 L1TRK_NAME  = "TTTracksFromTrackletEmulationWithQuality"
 L1TRK_LABEL = "Level1TTTracks"
@@ -45,7 +50,8 @@ L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigisWithQuality"
 
 
 process.load("L1Trigger.VertexFinder.VertexProducer_cff")
-process.VertexProducer.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.VertexProducer.l1TracksInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.VertexProducer.mcTruthTrackInputTag = cms.InputTag(L1TRUTH_NAME, L1TRK_LABEL)
 process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
