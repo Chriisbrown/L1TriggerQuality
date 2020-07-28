@@ -135,7 +135,7 @@ trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.g
   
   }
 
-  produces< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > >( "Level1TTTracks" ).setBranchAlias("Level1TTTracks");
+  produces< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > >( "Level1ClassTTTracks" ).setBranchAlias("Level1ClassTTTracks");
 }
 
 //////////////
@@ -237,7 +237,7 @@ void L1TrackClassifier::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
   }
   
-  iEvent.put( move(L1TkTracksForOutput), "Level1TTTracks");
+  iEvent.put( move(L1TkTracksForOutput), "Level1ClassTTTracks");
 
 }
 
