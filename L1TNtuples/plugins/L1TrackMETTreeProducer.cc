@@ -44,10 +44,10 @@
 // class declaration
 //
 
-class L1TrackMETProducer : public edm::EDAnalyzer {
+class L1TrackMETTreeProducer : public edm::EDAnalyzer {
 public:
-  explicit L1TrackMETProducer(const edm::ParameterSet&);
-  ~L1TrackMETProducer();
+  explicit L1TrackMETTreeProducer(const edm::ParameterSet&);
+  ~L1TrackMETTreeProducer();
 
 
 private:
@@ -76,7 +76,7 @@ private:
 
 };
 
-L1PhaseIPFJetTreeProducer::L1TrackMETProducer(const edm::ParameterSet& iConfig){
+L1TrackMETTreeProducer::L1TrackMETTreeProducer(const edm::ParameterSet& iConfig){
 
   genMET_ = consumes<reco::GenMET>(iConfig.getUntrackedParameter<edm::InputTag>("genMETToken"));
   TkMET_ = consumes<l1t::TkEtMiss > (iConfig.getParameter<edm::InputTag>("TkMETToken"));
@@ -94,7 +94,7 @@ L1PhaseIPFJetTreeProducer::L1TrackMETProducer(const edm::ParameterSet& iConfig){
 }
 
 
-L1METTreeProducer::~L1METTreeProducer()
+L1TrackMETTreeProducer::~L1TrackMETTreeProducer()
 {
 
   // do anything here that needs to be done at desctruction time
@@ -109,7 +109,7 @@ L1METTreeProducer::~L1METTreeProducer()
 
 // ------------ method called to for each event  ------------
 void
-L1METTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
  l1Extra->Reset();
