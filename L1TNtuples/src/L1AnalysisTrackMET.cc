@@ -11,7 +11,6 @@ L1Analysis::L1AnalysisTrackMET::~L1AnalysisTrackMET()
 }
 
 
-
 void L1Analysis::L1AnalysisTrackMET::SetTrackMET(const edm::Handle< l1t::TkEtMiss >  TkEtMiss, unsigned maxL1Extra)
 {
   l1extra_.TksumEt = TkEtMiss->etMiss();

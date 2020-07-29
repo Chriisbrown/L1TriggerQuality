@@ -25,7 +25,7 @@
 <class name="L1Analysis::L1AnalysisBMTFInputsDataFormat"/>
 <class name="L1Analysis::L1AnalysisL1HODataFormat"/>
 <class name="L1Analysis::L1AnalysisL1CaloClusterDataFormat"/>
-<class name="L1Analysis::L1AnalysisTrackMETDataFormat.h"/>
+<class name="L1Analysis::L1AnalysisTrackMETDataFormat"/>
 <class name="L1Analysis::L1AnalysisRecoTauDataFormat"/>
 <class name="L1Analysis::L1AnalysisRecoMuon2DataFormat"/>
 <class name="L1Analysis::L1AnalysisRecoElectronDataFormat"/>

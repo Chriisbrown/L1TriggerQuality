@@ -16,7 +16,7 @@ namespace L1Analysis
   struct L1AnalysisTrackMETDataFormat
   {
     L1AnalysisTrackMETDataFormat(){Reset();};
-    ~L1AnalysisTrakcMETDataFormat(){};
+    ~L1AnalysisTrackMETDataFormat(){};
 
     void Reset()
     {
