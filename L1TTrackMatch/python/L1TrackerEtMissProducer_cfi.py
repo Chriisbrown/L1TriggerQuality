@@ -35,3 +35,10 @@ L1TrackerEtMissMVACut = L1TrackerEtMiss.clone(
      MVACut = cms.bool(True),
      MVAThreshold = cms.double(0.5),
 )
+
+
+L1TrackerGenEtMiss = cms.EDProducer('L1TrackerGenEtProducer',
+     L1TrackingTrackInputTag = cms.InputTag("mix", "MergedTrackTruth"),
+     L1TrackingVertexInputTag = cms.InputTag("mix", "MergedTrackTruth"),
+     L1METTag = cms.string("GenMET"),
+)

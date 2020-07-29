@@ -89,12 +89,15 @@ process.L1TrackerEtMissMVACut.L1METTag = cms.string("TrackMETMVACut")
 process.L1TrackerEtMissMVACut.MVAThreshold = 0.3
 process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
+process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
+
 process.out = cms.OutputModule( "PoolOutputModule",
                                 fastCloning = cms.untracked.bool( False ),
                                 fileName = cms.untracked.string(options.outputFile),
                                 outputCommands = cms.untracked.vstring(
 #                            	"keep *",
      	                        "keep *_L1TrackerEtMiss*_*_*",
+                                "keep *_L1TrackerGenEtMiss*"
      	                        "keep *_VertexProducer_*_*"
      	                        )
 		               )
@@ -105,4 +108,5 @@ process.schedule = cms.Schedule(process.TTTracksEmulation,
                                 process.pL1TrackerEtMiss,
                                 process.pL1TrackerEtMissPurityCut,
                                 process.pL1TrackerEtMissMVACut,
+                                process.pL1TrackerGenEt,
                                 process.FEVToutput_step)
