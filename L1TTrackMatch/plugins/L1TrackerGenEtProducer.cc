@@ -134,14 +134,51 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   double sumPy_PU = 0;
   double etTot_PU = 0;
 
-  float zVTX = TrackingVertexHandle->begin()->z0();
+  float zVTX = TrackingVertexHandle->begin()->position().Z();
 
   for (trackIter = TrackingParticleHandle->begin(); trackIter != TrackingParticleHandle->end(); ++trackIter) {
     
-    float pt = trackIter->momentum().perp();
-    float phi = trackIter->momentum().phi();
-    float eta = trackIter->momentum().eta();
-    float z0  = trackIter->POCA().z();
+    float pt = trackIter->pt();
+    float phi = trackIter->phi();
+    float eta = trackIter->eta();
+
+    float tmp_tp_vz  = trackIter->vz();
+    float tmp_tp_vx  = trackIter->vx();
+    float tmp_tp_vy  = trackIter->vy();
+
+    float tmp_tp_z0_prod = tmp_tp_vz;
+    
+    
+    // ----------------------------------------------------------------------------------------------
+    // get d0/z0 propagated back to the IP
+    
+    float tmp_tp_t = tan(2.0*atan(1.0)-2.0*atan(exp(-eta)));
+
+    float delx = -tmp_tp_vx;
+    float dely = -tmp_tp_vy;
+
+    float A = 0.01*0.5696;
+    float Kmagnitude = A / pt;
+    
+    float tmp_tp_charge = tp_ptr->charge();
+    float K = Kmagnitude * tmp_tp_charge;
+    float d = 0;
+
+    float delx = -tmp_tp_vx;
+    float dely = -tmp_tp_vy;
+
+    float tmp_tp_x0p = delx - (d + 1./(2. * K)*sin(phi));
+    float tmp_tp_y0p = dely + (d + 1./(2. * K)*cos(phi));
+    float tmp_tp_rp = sqrt(tmp_tp_x0p*tmp_tp_x0p + tmp_tp_y0p*tmp_tp_y0p);
+    float tmp_tp_d0 = tmp_tp_charge*tmp_tp_rp - (1. / (2. * K));
+
+    tmp_tp_d0 = tmp_tp_d0*(-1); //fix d0 sign
+
+    static double pi = 4.0*atan(1.0);
+    float delphi = tmp_tp_phi-atan2(-K*tmp_tp_x0p,K*tmp_tp_y0p);
+    if (delphi<-pi) delphi+=2.0*pi;
+    if (delphi>pi) delphi-=2.0*pi;
+    float tmp_tp_z0 = tmp_tp_vz+tmp_tp_t*delphi/(2.0*K);
 
     
     // construct deltaZ cut to be based on track eta
