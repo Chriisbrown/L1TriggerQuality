@@ -146,7 +146,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     float bendchi2 = trackIter->stubPtConsistency();
     float z0  = trackIter->POCA().z();
 
-    if Purity_cut{
+    if (Purity_cut) {
 
       if (pt < minPt) continue;
       if (fabs(z0) > maxZ0) continue;
@@ -175,7 +175,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
 
     }
 
-    if MVA_cut{
+    if (MVA_cut) {
       float quality = trackIter->trkMVA1();
       if (quality < Threshold) continue;
     }
