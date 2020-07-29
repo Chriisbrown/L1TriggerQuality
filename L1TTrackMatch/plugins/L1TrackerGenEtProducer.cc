@@ -149,7 +149,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     float tmp_tp_z0_prod = tmp_tp_vz;
     
     
-    // ----------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     // get d0/z0 propagated back to the IP
     
     float tmp_tp_t = tan(2.0*atan(1.0)-2.0*atan(exp(-eta)));
@@ -160,12 +160,9 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     float A = 0.01*0.5696;
     float Kmagnitude = A / pt;
     
-    float tmp_tp_charge = tp_ptr->charge();
+    float tmp_tp_charge = trackIter->charge();
     float K = Kmagnitude * tmp_tp_charge;
     float d = 0;
-
-    float delx = -tmp_tp_vx;
-    float dely = -tmp_tp_vy;
 
     float tmp_tp_x0p = delx - (d + 1./(2. * K)*sin(phi));
     float tmp_tp_y0p = dely + (d + 1./(2. * K)*cos(phi));
@@ -175,7 +172,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     tmp_tp_d0 = tmp_tp_d0*(-1); //fix d0 sign
 
     static double pi = 4.0*atan(1.0);
-    float delphi = tmp_tp_phi-atan2(-K*tmp_tp_x0p,K*tmp_tp_y0p);
+    float delphi = phi-atan2(-K*tmp_tp_x0p,K*tmp_tp_y0p);
     if (delphi<-pi) delphi+=2.0*pi;
     if (delphi>pi) delphi-=2.0*pi;
     float tmp_tp_z0 = tmp_tp_vz+tmp_tp_t*delphi/(2.0*K);
@@ -189,7 +186,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     else if ( fabs(eta)>=1.6 &&  fabs(eta)<2.0)  DeltaZ = 1.7;
     else if ( fabs(eta)>=2.0 &&  fabs(eta)<=2.4) DeltaZ = 2.2;
 
-    if ( fabs(z0 - zVTX) <= DeltaZ) {
+    if ( fabs(tmp_tp_z0 - zVTX) <= DeltaZ) {
       sumPx += pt*cos(phi);
       sumPy += pt*sin(phi);
       etTot += pt ;
