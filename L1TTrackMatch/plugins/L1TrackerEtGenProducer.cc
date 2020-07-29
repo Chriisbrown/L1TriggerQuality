@@ -29,14 +29,14 @@
 
 using namespace l1t;
 
-class L1TrackerEtMissProducer : public edm::EDProducer {
+class L1TrackerEtGenProducer : public edm::EDProducer {
 public:
 
   
   typedef std::vector< TrackingParticle > L1TTTrackCollectionType;
 
-  explicit L1TrackerEtMissProducer(const edm::ParameterSet&);
-  ~L1TrackerEtMissProducer();
+  explicit L1TrackerEtGenProducer(const edm::ParameterSet&);
+  ~L1TrackerEtGenProducer();
 
 private:
   virtual void beginJob() ;
@@ -68,9 +68,9 @@ private:
 ///////////////
 //constructor//
 ///////////////
-L1TrackerEtMissProducer::L1TrackerEtMissProducer(const edm::ParameterSet& iConfig) :
-TrackingParticleToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag"))),
-TrackingVertexToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag")))
+L1TrackerEtGenProducer::L1TrackerEtGenProducer(const edm::ParameterSet& iConfig) :
+TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag"))),
+TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag")))
 {
   maxZ0 = (float)iConfig.getParameter<double>("maxZ0");
   DeltaZ = (float)iConfig.getParameter<double>("DeltaZ");
@@ -93,13 +93,13 @@ TrackingVertexToken_(consumes< std::vector< TrackingParticle > > (iConfig.getPar
 //////////////
 //destructor//
 //////////////
-L1TrackerEtMissProducer::~L1TrackerEtMissProducer() {
+L1TrackerEtGenProducer::~L1TrackerEtGenProducer() {
 }
 
 ////////////
 //producer//
 ////////////
-void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
+void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
   using namespace edm;
   // Tracker Topology
   edm::ESHandle<TrackerTopology> tTopoHandle_;
@@ -117,12 +117,12 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   L1TTTrackCollectionType::const_iterator trackIter;
 
   if( !TrackingVertexHandle.isValid() ) {
-    LogError("L1TrackerEtMissProducer")<< "\nWarning: VertexCollection not found in the event. Exit"<< std::endl;
+    LogError("L1TrackerEtGenProducer")<< "\nWarning: VertexCollection not found in the event. Exit"<< std::endl;
     return;
   }
 
   if( !TrackingParticleHandle.isValid() ) {
-    LogError("L1TrackerEtMissProducer")<< "\nWarning: L1TTTrackCollection not found in the event. Exit"<< std::endl;
+    LogError("L1TrackerEtGenProducer")<< "\nWarning: L1TTTrackCollection not found in the event. Exit"<< std::endl;
     return;
   }
 
@@ -214,10 +214,10 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   iEvent.put( std::move(METCollection), outputname);
 } // end producer
 
-void L1TrackerEtMissProducer::beginJob() {
+void L1TrackerEtGenProducer::beginJob() {
 }
 
-void L1TrackerEtMissProducer::endJob() {
+void L1TrackerEtGenProducer::endJob() {
 }
 
-DEFINE_FWK_MODULE(L1TrackerEtMissProducer);
+DEFINE_FWK_MODULE(L1TrackerEtGenProducer);
