@@ -130,7 +130,7 @@ L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
 
   if (TkMET.isValid()){
-    l1Extra->SetTkMET(TkMET, maxL1Extra_);
+    l1Extra->SetTrackMET(TkMET, maxL1Extra_);
   } else {
     edm::LogWarning("MissingProduct") << "L1 Track MET not found. Branch will not be filled" << std::endl;
   }

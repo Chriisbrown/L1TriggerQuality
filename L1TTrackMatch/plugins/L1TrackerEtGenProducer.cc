@@ -44,20 +44,7 @@ private:
   virtual void endJob() ;
 
   // ----------member data ---------------------------
-  float maxZ0;	    // in cm
   float DeltaZ;	    // in cm
-  float maxEta;
-  float chi2dofMax;
-  float bendchi2Max;
-  float minPt;	    // in GeV
-  int nStubsmin;
-  int nStubsPSmin;  // minimum number of stubs in PS modules
-  float maxPt;	    // in GeV
-  int HighPtTracks; // saturate or truncate
-
-  bool Purity_cut;
-  bool MVA_cut;
-  float Threshold;
 
   std::string outputname;
 
@@ -69,22 +56,10 @@ private:
 //constructor//
 ///////////////
 L1TrackerEtGenProducer::L1TrackerEtGenProducer(const edm::ParameterSet& iConfig) :
-TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag"))),
 TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag")))
+TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag"))),
 {
-  maxZ0 = (float)iConfig.getParameter<double>("maxZ0");
   DeltaZ = (float)iConfig.getParameter<double>("DeltaZ");
-  chi2dofMax = (float)iConfig.getParameter<double>("chi2dofMax");
-  bendchi2Max = (float)iConfig.getParameter<double>("bendchi2Max");
-  minPt = (float)iConfig.getParameter<double>("minPt");
-  nStubsmin = iConfig.getParameter<int>("nStubsmin");
-  nStubsPSmin = iConfig.getParameter<int>("nStubsPSmin");
-  maxPt = (float)iConfig.getParameter<double>("maxPt");
-  maxEta = (float)iConfig.getParameter<double>("maxEta");
-  HighPtTracks = iConfig.getParameter<int>("HighPtTracks");
-  Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
-  Purity_cut = iConfig.getParameter<bool>("Cut");
-  MVA_cut = iConfig.getParameter<bool>("MVACut");
   outputname = iConfig.getParameter<std::string>("L1METTag");
 
   produces<TkEtMissCollection>(outputname);

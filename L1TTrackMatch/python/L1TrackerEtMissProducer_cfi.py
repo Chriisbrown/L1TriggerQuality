@@ -41,4 +41,5 @@ L1TrackerGenEtMiss = cms.EDProducer('L1TrackerEtGenProducer',
      L1TrackingTrackInputTag = cms.InputTag("mix", "MergedTrackTruth"),
      L1TrackingVertexInputTag = cms.InputTag("mix", "MergedTrackTruth"),
      L1METTag = cms.string("GenMET"),
+     DeltaZ = cms.double( 3. ),
 )
