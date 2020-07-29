@@ -19,5 +19,19 @@ L1TrackerEtMiss = cms.EDProducer('L1TrackerEtMissProducer',
      HighPtTracks = cms.int32( 1 ),  # when = 0 : truncation. Tracks with PT above maxPt are ignored
                                      # when = 1 : saturation. Tracks with PT above maxPt are set to PT=maxPt.
                                      # When maxPt < 0, no special treatment is done for high PT tracks.
+     Cut = cms.bool(False),
+     MVACut = cms.bool(False),
+     MVAThreshold = cms.double(0.5),
+)
+
+
+L1TrackerEtMissPurityCut = L1TrackerEtMiss.clone(
+     
+     Cut = cms.bool(True)
+)
+
+L1TrackerEtMissMVACut = L1TrackerEtMiss.clone(
+     
+     MVACut = cms.bool(True),
      MVAThreshold = cms.double(0.5),
 )

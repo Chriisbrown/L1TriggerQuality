@@ -55,16 +55,18 @@ process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
-process.L1TrackerEtMiss.MVAThreshold = cms.double(0.3)
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.L1TrackerEtMiss.L1METTag = cms.string("TrackMET")
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
-process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
-process.L1TrackerEtMiss.MVAThreshold = cms.double(0.0)
-process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.L1TrackerEtMiss.L1METTag = cms.string("TrackMETnoCut")
-process.pL1TrackerEtMissnocut =cms.Path(process.L1TrackerEtMiss)
+process.L1TrackerEtMissPurityCut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerEtMissPurityCut.L1METTag = cms.string("TrackMETPurityCut")
+process.pL1TrackerEtMissPurityCut =cms.Path(process.L1TrackerEtMissPurityCut)
+
+process.L1TrackerEtMissMVACut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerEtMissMVACut.L1METTag = cms.string("TrackMETPurityCut")
+process.L1TrackerEtMissMVACut.MVAThreshold = cms.float(0.3)
+process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
 process.out = cms.OutputModule( "PoolOutputModule",
                                 fastCloning = cms.untracked.bool( False ),
@@ -75,5 +77,6 @@ process.schedule = cms.Schedule(process.TTTracksEmulation,
                                 process.TTTracksEmulationWithTruth,
                                 process.pTkPrimaryVertex,
                                 process.pL1TrackerEtMiss,
-                                process.pL1TrackerEtMissnocut,
+                                process.pL1TrackerEtMissPurityCut,
+                                process.pL1TrackerEtMissMVACut,
                                 process.FEVToutput_step)
