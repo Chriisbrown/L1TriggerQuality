@@ -33,7 +33,7 @@ class L1TrackerEtMissProducer : public edm::EDProducer {
 public:
 
   
-  typedef < std::vector< TrackingParticle > L1TTTrackCollectionType;
+  typedef std::vector< TrackingParticle > L1TTTrackCollectionType;
 
   explicit L1TrackerEtMissProducer(const edm::ParameterSet&);
   ~L1TrackerEtMissProducer();
@@ -62,7 +62,7 @@ private:
   std::string outputname;
 
   const edm::EDGetTokenT< std::vector< TrackingParticle > > TrackingParticleToken_;
-  const edm::EDGetTokenT< std::vector< TrackingVertexToken_ > > pvToken;
+  const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
 };
 
 ///////////////
@@ -116,12 +116,12 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
 
   L1TTTrackCollectionType::const_iterator trackIter;
 
-  if( !L1VertexHandle.isValid() ) {
+  if( !TrackingVertexHandle.isValid() ) {
     LogError("L1TrackerEtMissProducer")<< "\nWarning: VertexCollection not found in the event. Exit"<< std::endl;
     return;
   }
 
-  if( !L1TTTrackHandle.isValid() ) {
+  if( !TrackingParticleHandle.isValid() ) {
     LogError("L1TrackerEtMissProducer")<< "\nWarning: L1TTTrackCollection not found in the event. Exit"<< std::endl;
     return;
   }
@@ -134,9 +134,9 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   double sumPy_PU = 0;
   double etTot_PU = 0;
 
-  float zVTX = L1VertexHandle->begin()->z0();
+  float zVTX = TrackingVertexHandle->begin()->z0();
 
-  for (trackIter = L1TTTrackHandle->begin(); trackIter != L1TTTrackHandle->end(); ++trackIter) {
+  for (trackIter = TrackingParticleHandle->begin(); trackIter != TrackingParticleHandle->end(); ++trackIter) {
     
     float pt = trackIter->momentum().perp();
     float phi = trackIter->momentum().phi();
