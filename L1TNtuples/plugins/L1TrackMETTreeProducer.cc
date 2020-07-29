@@ -28,8 +28,8 @@
 
 // data formats
 
-#include "DataFormats/L1TrackTrigger/interface/L1TkEtMissParticleFwd.h"
-#include "DataFormats/L1TrackTrigger/interface/L1TkEtMissParticle.h"
+#include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
+#include "DataFormats/L1TCorrelator/interface/TkEtMissFwd.h"
 #include "DataFormats/METReco/interface/GenMET.h"
 
 
@@ -38,7 +38,7 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TTree.h"
 
-#include "L1Trigger/L1TNtuples/interface/L1AnalysisTrackMETDataFormat.h"
+#include "L1Trigger/L1TNtuples/interface/L1AnalysisTrackMET.h"
 
 //
 // class declaration

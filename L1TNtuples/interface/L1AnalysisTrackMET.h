@@ -8,7 +8,7 @@
 // Original code : UserCode/L1TriggerDPG/L1ExtraTreeProducer - Jim Brooke
 //-------------------------------------------------------------------------------
 
-#include "DataFormats/L1TrackTrigger/interface/L1TkEtMissParticle.h"
+#include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
 #include "DataFormats/METReco/interface/GenMETCollection.h"
 #include "L1Trigger/L1TNtuples/interface/L1AnalysisTrackMETDataFormat.h"
 
