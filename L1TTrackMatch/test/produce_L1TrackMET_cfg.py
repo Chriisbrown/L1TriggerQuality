@@ -26,7 +26,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:upgradePLS3', '')
 
 
 
-options = VarParsing.VarParsing ('Parameters')
+options = VarParsing.VarParsing ('Analysis')
 
 options.parseArguments()
 
@@ -91,7 +91,12 @@ process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
 process.out = cms.OutputModule( "PoolOutputModule",
                                 fastCloning = cms.untracked.bool( False ),
-                                fileName = cms.untracked.string(options.outputFile)
+                                fileName = cms.untracked.string(options.outputFile),
+                                outputCommands = cms.untracked.vstring(
+#                            	"keep *",
+     	                        "keep *_L1TrackerEtMiss*_*_*",
+     	                        "keep *_VertexProducer_*_*"
+     	                        )
 		               )
 process.FEVToutput_step = cms.EndPath(process.out)
 process.schedule = cms.Schedule(process.TTTracksEmulation,
