@@ -56,8 +56,8 @@ private:
 //constructor//
 ///////////////
 L1TrackerEtGenProducer::L1TrackerEtGenProducer(const edm::ParameterSet& iConfig) :
-TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag")))
-TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag"))),
+TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag"))),
+TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag")))
 {
   DeltaZ = (float)iConfig.getParameter<double>("DeltaZ");
   outputname = iConfig.getParameter<std::string>("L1METTag");

@@ -23,7 +23,7 @@ namespace L1Analysis
 
     // Add new PFJet collections 
     void SetGenMET  (const edm::Handle<reco::GenMET > genMET,    unsigned maxL1Extra);
-    void SetTrackkMET  (const edm::Handle< l1t::TkEtMiss >  TkEtMiss,    unsigned maxL1Extra);
+    void SetTrackMET  (const edm::Handle< l1t::TkEtMiss >  TkEtMiss,    unsigned maxL1Extra);
 
     L1AnalysisTrackMETDataFormat * getData() {return &l1extra_;}
 

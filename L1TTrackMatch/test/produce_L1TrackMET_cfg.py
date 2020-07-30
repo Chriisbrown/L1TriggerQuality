@@ -97,7 +97,7 @@ process.out = cms.OutputModule( "PoolOutputModule",
                                 outputCommands = cms.untracked.vstring(
 #                            	"keep *",
      	                        "keep *_L1TrackerEtMiss*_*_*",
-                                "keep *_L1TrackerGenEtMiss*"
+                                "keep *_L1TrackerGenEtMiss*_*_*"
      	                        "keep *_VertexProducer_*_*"
      	                        )
 		               )

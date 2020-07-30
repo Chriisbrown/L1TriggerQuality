@@ -89,7 +89,7 @@ L1TrackMETTreeProducer::L1TrackMETTreeProducer(const edm::ParameterSet& iConfig)
 
   // set up output
   tree_=fs_->make<TTree>("L1METTree", "L1METTree");
-  tree_->Branch("L1MET", "L1Analysis::L1AnalysisMETDataFormat", &l1ExtraData, 32000, 3);
+  tree_->Branch("L1MET", "L1Analysis::L1AnalysisTrackMETDataFormat", &l1ExtraData, 32000, 3);
 
 }
 

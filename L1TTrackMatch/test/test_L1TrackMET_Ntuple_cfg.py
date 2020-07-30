@@ -37,8 +37,8 @@ process.source = process.source = cms.Source("PoolSource",
 )
 
 process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracksWithQuality_cff")
-process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
-process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
+#process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
+#process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
 
 
 NHELIXPAR = 4
@@ -50,15 +50,15 @@ L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigisWithQuality"
 process.load("L1Trigger.VertexFinder.VertexProducer_cff")
 process.VertexProducer.l1TracksInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.VertexProducer.mcTruthTrackInputTag = cms.InputTag(L1TRUTH_NAME, L1TRK_LABEL)
-process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
+#process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.L1TrackerEtMiss.L1METTag = cms.string("TrackMET")
-process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
+#process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
-process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
+#process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 
 
 process.load("L1Trigger.L1TNtuples.l1TrackMETTreeProducer_cfi")
@@ -68,8 +68,8 @@ process.TFileService = cms.Service("TFileService",
     fileName = cms.string('L1Ntuple.root')
 )
 
-process.p = cms.Path(process.TTTracksEmulation+
-                                process.TTTracksEmulationWithTruth+
-                                process.pTkPrimaryVertex+
-                                process.pL1TrackerGenEt+
-                                process.pL1TrackerEtMiss)
+process.p = cms.Path(process.L1HybridTracksWithQuality+
+                     process.L1HybridTracksWithAssociatorsWithQuality+
+                     process.VertexProducer+
+                     process.L1TrackerGenEtMiss+
+                     process.L1TrackerEtMiss)
