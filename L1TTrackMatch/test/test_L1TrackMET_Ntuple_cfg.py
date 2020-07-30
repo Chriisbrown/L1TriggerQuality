@@ -6,8 +6,14 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 
 process = cms.Process("TEST")
 
-process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 1
+process.load('Configuration.StandardSequences.Services_cff')
+process.load('FWCore.MessageService.MessageLogger_cfi')
+process.load('Configuration.EventContent.EventContent_cff')
+process.load('Configuration.StandardSequences.MagneticField_cff')
+
+
+process.load('Configuration.Geometry.GeometryExtended2026D35Reco_cff')
+process.load('Configuration.Geometry.GeometryExtended2026D35_cff')
 
 options = VarParsing.VarParsing ('analysis')
 # get and parse the command line arguments
@@ -36,6 +42,13 @@ process.source = process.source = cms.Source("PoolSource",
   fileNames = readFiles,
 )
 
+process.load('Configuration.StandardSequences.EndOfProcess_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+
+from Configuration.AlCa.GlobalTag import GlobalTag
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
+
+
 process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracksWithQuality_cff")
 #process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
 #process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
@@ -56,6 +69,7 @@ process.VertexProducer.mcTruthTrackInputTag = cms.InputTag(L1TRUTH_NAME, L1TRK_L
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.L1TrackerEtMiss.L1METTag = cms.string("TrackMET")
+process.L1TrackerEtMiss.L1METTag = cms.string("GenMET")
 #process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
 #process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
@@ -68,7 +82,7 @@ process.TFileService = cms.Service("TFileService",
     fileName = cms.string('L1Ntuple.root')
 )
 
-process.p = cms.Path(process.L1HybridTracksWithQuality+
+process.p = cms.Path(
                      process.L1HybridTracksWithAssociatorsWithQuality+
                      process.VertexProducer+
                      process.L1TrackerGenEtMiss+
