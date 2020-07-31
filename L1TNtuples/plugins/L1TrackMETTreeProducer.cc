@@ -69,6 +69,8 @@ private:
 
   edm::EDGetTokenT<l1t::TkEtMissCollection> genMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> TkMET_;
+  edm::EDGetTokenT<l1t::TkEtMissCollection> CutTkMET_;
+  edm::EDGetTokenT<l1t::TkEtMissCollection> MVATkMET_;
 
 
 };
@@ -77,6 +79,8 @@ L1TrackMETTreeProducer::L1TrackMETTreeProducer(const edm::ParameterSet& iConfig)
 
   genMET_ = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("genMETToken"));
   TkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("TkMETToken"));
+  CutTkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("CutTkMETToken"));
+  MVATkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("MVATkMETToken"));
 
   l1Extra     = new L1Analysis::L1AnalysisTrackMET();
   l1ExtraData = l1Extra->getData();
@@ -113,7 +117,7 @@ L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
   iEvent.getByToken(genMET_, genMET);
 
   if (genMET.isValid()){ 
-    l1Extra->SetGenMET(genMET);
+    l1Extra->SetTrackMET(genMET,"Gen");
   } else {
     edm::LogWarning("MissingProduct") << "Gen MET not found. Branch will not be filled" << std::endl;
   }
@@ -124,9 +128,29 @@ L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
 
   if (TkMET.isValid()){
-    l1Extra->SetTrackMET(TkMET);
+    l1Extra->SetTrackMET(TkMET,"Track");
   } else {
     edm::LogWarning("MissingProduct") << "L1 Track MET not found. Branch will not be filled" << std::endl;
+  }
+
+  edm::Handle<l1t::TkEtMissCollection> CutTkMET;
+  iEvent.getByToken(CutTkMET_,CutTkMET);
+
+
+  if (CutTkMET.isValid()){
+    l1Extra->SetTrackMET(CutTkMET,"Cut");
+  } else {
+    edm::LogWarning("MissingProduct") << "L1 Track Cut MET not found. Branch will not be filled" << std::endl;
+  }
+
+  edm::Handle<l1t::TkEtMissCollection> MVATkMET;
+  iEvent.getByToken(MVATkMET_,MVATkMET);
+
+
+  if (MVATkMET.isValid()){
+    l1Extra->SetTrackMET(MVATkMET,"MVA");
+  } else {
+    edm::LogWarning("MissingProduct") << "L1 Track MVA MET not found. Branch will not be filled" << std::endl;
   }
 
 

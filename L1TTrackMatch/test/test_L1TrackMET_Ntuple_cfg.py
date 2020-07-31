@@ -49,21 +49,12 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
 process.load("L1Trigger.L1TNtuples.l1TrackMETTreeProducer_cfi")
-process.l1TrackMETTree.TkMETToken = cms.string("TrackMET")
-process.pl1TrackMETTree=cms.Path(process.l1TrackMETTree)
-
-process.l1TrackMETTree.TkMETToken = cms.string("TrackMETPurityCut")
-process.pl1TrackMETTreecut=cms.Path(process.l1TrackMETTree)
-
-process.l1TrackMETTree.TkMETToken = cms.string("TrackMETMVACut")
-process.pl1TrackMETTreeMVA=cms.Path(process.l1TrackMETTree)
 
 
-process.out = cms.OutputModule( "PoolOutputModule",
-                                fastCloning = cms.untracked.bool( False ),
-                                fileName = cms.untracked.string('L1Ntuple.root')
-                              )
-process.schedule = cms.Schedule(process.pl1TrackMETTree,
-                                process.pl1TrackMETTreecut,
-                                process.pl1TrackMETTreeMVA)
+process.TFileService = cms.Service("TFileService",
+    fileName = cms.string('L1Ntuple.root')
+)
+
+
+process.p = cms.Schedule(process.l1TrackMETTree)
   

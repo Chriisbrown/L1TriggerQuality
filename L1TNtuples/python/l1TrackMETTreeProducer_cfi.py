@@ -4,8 +4,10 @@ l1TrackMETTree = cms.EDAnalyzer("L1TrackMETTreeProducer",
 
    genMETToken = cms.InputTag("L1TrackerGenEtMiss","GenMET"),
    TkMETToken  = cms.InputTag("L1TrackerEtMiss","TrackMET"),
+   CutTkMETToken = cms.InputTag("L1TrackerEtMiss","TrackMETPurityCut"),
+   MVATkMETToken = cms.InputTag("L1TrackerEtMiss","TrackMETMVACut"),
 
-   maxL1Extra = cms.uint32(20)
 )
 
 runmenutree=cms.Path(l1TrackMETTree)
+
