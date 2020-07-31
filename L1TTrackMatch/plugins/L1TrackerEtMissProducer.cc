@@ -154,11 +154,6 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
       if (chi2dof > chi2dofMax) continue;
       if (bendchi2 > bendchi2Max) continue;
 
-      if ( maxPt > 0 && pt > maxPt)  {
-        if (HighPtTracks == 0)  continue;	// ignore these very high PT tracks: truncate
-        if (HighPtTracks == 1)  pt = maxPt; // saturate
-      }
-
       int nPS = 0.;     // number of stubs in PS modules
       // loop over the stubs
       for (unsigned int istub=0; istub<(unsigned int)theStubs.size(); istub++) {

@@ -44,7 +44,12 @@ private:
   virtual void endJob() ;
 
   // ----------member data ---------------------------
+  float maxZ0;	    // in cm
   float DeltaZ;	    // in cm
+  float maxEta;    
+  float minPt;
+  float maxPt;	    // in GeV
+  int HighPtTracks; // saturate or truncate
 
   std::string outputname;
 
@@ -61,6 +66,11 @@ TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParame
 {
   DeltaZ = (float)iConfig.getParameter<double>("DeltaZ");
   outputname = iConfig.getParameter<std::string>("L1METTag");
+  maxZ0 = (float)iConfig.getParameter<double>("maxZ0");
+  minPt = (float)iConfig.getParameter<double>("minPt");
+  maxPt = (float)iConfig.getParameter<double>("maxPt");
+  maxEta = (float)iConfig.getParameter<double>("maxEta");
+  HighPtTracks = iConfig.getParameter<int>("HighPtTracks");
 
   produces<TkEtMissCollection>(outputname);
 }
@@ -116,6 +126,7 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
     float pt = trackIter->pt();
     float phi = trackIter->phi();
     float eta = trackIter->eta();
+    
 
     float tmp_tp_vz  = trackIter->vz();
     float tmp_tp_vx  = trackIter->vx();
@@ -151,6 +162,17 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
     if (delphi<-pi) delphi+=2.0*pi;
     if (delphi>pi) delphi-=2.0*pi;
     float tmp_tp_z0 = tmp_tp_vz+tmp_tp_t*delphi/(2.0*K);
+
+
+    if (pt < minPt) continue;
+    if (fabs(tmp_tp_z0) > maxZ0) continue;
+    if (fabs(eta) > maxEta) continue;
+
+    if ( maxPt > 0 && pt > maxPt)  {
+        if (HighPtTracks == 0)  continue;	// ignore these very high PT tracks: truncate
+        if (HighPtTracks == 1)  pt = maxPt; // saturate
+      }
+
 
     
     // construct deltaZ cut to be based on track eta

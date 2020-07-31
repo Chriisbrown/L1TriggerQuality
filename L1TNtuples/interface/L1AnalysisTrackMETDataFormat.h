@@ -24,8 +24,8 @@ namespace L1Analysis
       TksumEt.clear();
     }
 
-    <std::vector>double gensumEt;
-    <std::vector>double TksumEt;
+    std::vector<double> gensumEt;
+    std::vector<double> TksumEt;
 
   }; 
 }

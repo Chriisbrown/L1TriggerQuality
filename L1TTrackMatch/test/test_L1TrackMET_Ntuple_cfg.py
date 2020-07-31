@@ -48,42 +48,22 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
-'''
-process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracksWithQuality_cff")
-#process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
-#process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
-
-
-NHELIXPAR = 4
-L1TRK_NAME  = "TTTracksFromTrackletEmulationWithQuality"
-L1TRK_LABEL = "Level1TTTracks"
-L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigisWithQuality"
-
-
-process.load("L1Trigger.VertexFinder.VertexProducer_cff")
-process.VertexProducer.l1TracksInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.VertexProducer.mcTruthTrackInputTag = cms.InputTag(L1TRUTH_NAME, L1TRK_LABEL)
-#process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
-
-
-process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
-process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.L1TrackerEtMiss.L1METTag = cms.string("TrackMET")
-process.L1TrackerEtMiss.L1METTag = cms.string("GenMET")
-#process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
-
-#process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
-
-'''
 process.load("L1Trigger.L1TNtuples.l1TrackMETTreeProducer_cfi")
+process.l1TrackMETTree.TkMETToken = cms.string("TrackMET")
+process.pl1TrackMETTree=cms.Path(process.l1TrackMETTree)
+
+process.l1TrackMETTree.TkMETToken = cms.string("TrackMETPurityCut")
+process.pl1TrackMETTreecut=cms.Path(process.l1TrackMETTree)
+
+process.l1TrackMETTree.TkMETToken = cms.string("TrackMETMVACut")
+process.pl1TrackMETTreeMVA=cms.Path(process.l1TrackMETTree)
 
 
-process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('L1Ntuple.root')
-)
-
-process.p = cms.Path(
-                     process.L1HybridTracksWithAssociatorsWithQuality+
-                     process.VertexProducer+
-                     process.L1TrackerGenEtMiss+
-                     process.L1TrackerEtMiss)
+process.out = cms.OutputModule( "PoolOutputModule",
+                                fastCloning = cms.untracked.bool( False ),
+                                fileName = cms.untracked.string('L1Ntuple.root')
+                              )
+process.schedule = cms.Schedule(process.pl1TrackMETTree,
+                                process.pl1TrackMETTreecut,
+                                process.pl1TrackMETTreeMVA)
+  

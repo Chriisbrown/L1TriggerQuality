@@ -42,4 +42,9 @@ L1TrackerGenEtMiss = cms.EDProducer('L1TrackerEtGenProducer',
      L1TrackingVertexInputTag = cms.InputTag("mix", "MergedTrackTruth"),
      L1METTag = cms.string("GenMET"),
      DeltaZ = cms.double( 3. ),
+     maxZ0 = cms.double ( 15. ) ,    # in cm
+     maxEta = cms.double ( 2.4 ) ,
+     minPt = cms.double( 2. ), 
+     maxPt = cms.double( 200. ),
+     HighPtTracks = cms.int32( 1 )
 )
