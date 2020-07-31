@@ -56,5 +56,5 @@ process.TFileService = cms.Service("TFileService",
 )
 
 
-process.p = cms.Schedule(process.l1TrackMETTree)
+process.p = cms.Path(process.l1TrackMETTree)
   
