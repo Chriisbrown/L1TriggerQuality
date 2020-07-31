@@ -48,7 +48,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
-
+'''
 process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracksWithQuality_cff")
 #process.TTTracksEmulation = cms.Path(process.L1HybridTracksWithQuality)
 #process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociatorsWithQuality)
@@ -74,7 +74,7 @@ process.L1TrackerEtMiss.L1METTag = cms.string("GenMET")
 
 #process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 
-
+'''
 process.load("L1Trigger.L1TNtuples.l1TrackMETTreeProducer_cfi")
 
 

@@ -9,7 +9,7 @@
 //-------------------------------------------------------------------------------
 
 #include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
-#include "DataFormats/METReco/interface/GenMETCollection.h"
+#include "DataFormats/L1TCorrelator/interface/TkEtMissFwd.h"
 #include "L1Trigger/L1TNtuples/interface/L1AnalysisTrackMETDataFormat.h"
 
 namespace L1Analysis
@@ -22,13 +22,10 @@ namespace L1Analysis
     void Reset() {l1extra_.Reset();}
 
     // Add new PFJet collections 
-    void SetGenMET  (const edm::Handle<reco::GenMET > genMET,    unsigned maxL1Extra);
-    void SetTrackMET  (const edm::Handle< l1t::TkEtMiss >  TkEtMiss,    unsigned maxL1Extra);
+    void SetGenMET  (const edm::Handle<l1t::TkEtMissCollection > genMET,    unsigned maxL1Extra);
+    void SetTrackMET  (const edm::Handle<l1t::TkEtMissCollection >  TkEtMiss,    unsigned maxL1Extra);
 
     L1AnalysisTrackMETDataFormat * getData() {return &l1extra_;}
-
-
-
 
   private :
     L1AnalysisTrackMETDataFormat l1extra_;

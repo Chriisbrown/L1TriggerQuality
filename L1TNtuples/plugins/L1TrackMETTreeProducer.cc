@@ -30,8 +30,6 @@
 
 #include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
 #include "DataFormats/L1TCorrelator/interface/TkEtMissFwd.h"
-#include "DataFormats/METReco/interface/GenMET.h"
-
 
 // ROOT output stuff
 #include "FWCore/ServiceRegistry/interface/Service.h"
@@ -62,7 +60,6 @@ public:
 
 private:
 
-  unsigned maxL1Extra_;
 
   // output file
   edm::Service<TFileService> fs_;
@@ -70,19 +67,16 @@ private:
   // tree
   TTree * tree_;
 
-  edm::EDGetTokenT<reco::GenMET > genMET_;
-  edm::EDGetTokenT<l1t::TkEtMiss> TkMET_;
+  edm::EDGetTokenT<l1t::TkEtMissCollection> genMET_;
+  edm::EDGetTokenT<l1t::TkEtMissCollection> TkMET_;
 
 
 };
 
 L1TrackMETTreeProducer::L1TrackMETTreeProducer(const edm::ParameterSet& iConfig){
 
-  genMET_ = consumes<reco::GenMET>(iConfig.getUntrackedParameter<edm::InputTag>("genMETToken"));
-  TkMET_ = consumes<l1t::TkEtMiss > (iConfig.getParameter<edm::InputTag>("TkMETToken"));
-
-
-  maxL1Extra_ = iConfig.getParameter<unsigned int>("maxL1Extra");
+  genMET_ = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("genMETToken"));
+  TkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("TkMETToken"));
 
   l1Extra     = new L1Analysis::L1AnalysisTrackMET();
   l1ExtraData = l1Extra->getData();
@@ -115,22 +109,22 @@ L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
  l1Extra->Reset();
 
 
-  edm::Handle<reco::GenMET> genMET;
+  edm::Handle<l1t::TkEtMissCollection> genMET;
   iEvent.getByToken(genMET_, genMET);
 
   if (genMET.isValid()){ 
-    l1Extra->SetGenMET(genMET,maxL1Extra_);
+    l1Extra->SetGenMET(genMET);
   } else {
     edm::LogWarning("MissingProduct") << "Gen MET not found. Branch will not be filled" << std::endl;
   }
 
 
-  edm::Handle<l1t::TkEtMiss> TkMET;
+  edm::Handle<l1t::TkEtMissCollection> TkMET;
   iEvent.getByToken(TkMET_,TkMET);
 
 
   if (TkMET.isValid()){
-    l1Extra->SetTrackMET(TkMET, maxL1Extra_);
+    l1Extra->SetTrackMET(TkMET);
   } else {
     edm::LogWarning("MissingProduct") << "L1 Track MET not found. Branch will not be filled" << std::endl;
   }
