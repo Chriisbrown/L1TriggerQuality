@@ -94,15 +94,21 @@ process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 process.out = cms.OutputModule( "PoolOutputModule",
                                 fastCloning = cms.untracked.bool( False ),
                                 fileName = cms.untracked.string(options.outputFile),
+                                dataset = cms.untracked.PSet(
+                                filterName = cms.untracked.string(''),
+                                dataTier = cms.untracked.string('GEN-SIM')
+                                ),
                                 outputCommands = cms.untracked.vstring(
 #                            	"keep *",
      	                        "keep *_L1TrackerEtMiss*_*_*",
                                 "keep *_L1TrackerGenEtMiss*_*_*",
-     	                        "keep *_VertexProducer_*_*"
+     	                        "keep *_VertexProducer_*_*",
+                                "keep  *TTTrack*_*_*_*",
+                                "keep  *TTStub*_*_*_*"
      	                        )
 		               )
 process.FEVToutput_step = cms.EndPath(process.out)
-process.schedule = cms.Schedule(process.TTTracksEmulation,
+process.schedule = cms.Schedule(
                                 process.TTTracksEmulationWithTruth,
                                 process.pTkPrimaryVertex,
                                 process.pL1TrackerEtMiss,
