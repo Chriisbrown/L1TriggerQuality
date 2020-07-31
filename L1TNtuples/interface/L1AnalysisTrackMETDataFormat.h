@@ -20,12 +20,12 @@ namespace L1Analysis
 
     void Reset()
     {
-      gensumEt = 0;
-      TksumEt = 0;
+      gensumEt.clear();
+      TksumEt.clear();
     }
 
-    double gensumEt;
-    double TksumEt;
+    <std::vector>double gensumEt;
+    <std::vector>double TksumEt;
 
   }; 
 }

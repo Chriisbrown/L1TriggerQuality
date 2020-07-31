@@ -12,10 +12,18 @@ L1Analysis::L1AnalysisTrackMET::~L1AnalysisTrackMET()
 
 void L1Analysis::L1AnalysisTrackMET::SetTrackMET(const edm::Handle<l1t::TkEtMissCollection>  TkEtMiss)
 {
-  l1extra_.TksumEt = TkEtMiss->etMiss();
+
+  for (unsigned int i=0; i<TksumEt->size(); i++){
+      l1extra_.TksumEt.push_back(TkEtMiss->at(i)->etMiss());
+      
+}
 }
 
 void L1Analysis::L1AnalysisTrackMET::SetGenMET(const edm::Handle<l1t::TkEtMissCollection> genMET)
 {
-  l1extra_.gensumEt = genMET->etMiss();
+
+  for (unsigned int i=0; i<genMET->size(); i++){
+      l1extra_.gensumEt.push_back(genMET->at(i)->etMiss());
+      
+}
 }
