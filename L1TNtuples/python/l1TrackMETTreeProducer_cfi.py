@@ -2,10 +2,10 @@ import FWCore.ParameterSet.Config as cms
 
 l1TrackMETTree = cms.EDAnalyzer("L1TrackMETTreeProducer",
 
-   genMETToken = cms.InputTag("L1TrackerGenEtMiss","GenMET"),
-   TkMETToken  = cms.InputTag("L1TrackerEtMiss","TrackMET"),
-   CutTkMETToken = cms.InputTag("L1TrackerEtMissPurityCut","TrackMETPurityCut"),
-   MVATkMETToken = cms.InputTag("L1TrackerEtMissMVACut","TrackMETMVACut"),
+   genMETToken = cms.InputTag("L1TrackerGenEtMiss","GenMet"),
+   TkMETToken  = cms.InputTag("L1TrackerEtMiss","TrkMet"),
+   CutTkMETToken = cms.InputTag("L1TrackerEtMissPurityCut","CutTrkMet"),
+   MVATkMETToken = cms.InputTag("L1TrackerEtMissMVACut","MVATrkMet"),
 
 )
 

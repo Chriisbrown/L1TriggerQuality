@@ -20,16 +20,16 @@ namespace L1Analysis
 
     void Reset()
     {
-      GensumEt.clear();
-      TksumEt.clear();
-      CutsumEt.clear();
-      MVAsumEt.clear();
+      GenMet.clear();
+      TrkMet.clear();
+      CutTrkMet.clear();
+      MVATrkMet.clear();
     }
 
-    std::vector<double> GensumEt;
-    std::vector<double> TksumEt;
-    std::vector<double> CutsumEt;
-    std::vector<double> MVAsumEt;
+    std::vector<double> GenMet;
+    std::vector<double> TrkMet;
+    std::vector<double> CutTrkMet;
+    std::vector<double> MVATrkMet;
 
   }; 
 }

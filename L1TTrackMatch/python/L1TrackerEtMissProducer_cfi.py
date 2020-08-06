@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 L1TrackerEtMiss = cms.EDProducer('L1TrackerEtMissProducer',
      L1TrackInputTag = cms.InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks"),
      L1VertexInputTag = cms.InputTag("VertexProducer", "l1vertextdr"),
-     L1METTag = cms.string("TrackMET"),
+     L1TrkMETTag = cms.string("TrkMET"),
 
      maxZ0 = cms.double ( 15. ) ,    # in cm
      maxEta = cms.double ( 2.4 ) ,
@@ -40,7 +40,7 @@ L1TrackerEtMissMVACut = L1TrackerEtMiss.clone(
 L1TrackerGenEtMiss = cms.EDProducer('L1TrackerEtGenProducer',
      L1TrackingTrackInputTag = cms.InputTag("mix", "MergedTrackTruth"),
      L1TrackingVertexInputTag = cms.InputTag("mix", "MergedTrackTruth"),
-     L1METTag = cms.string("GenMET"),
+     L1TrkMETTag = cms.string("GenMet"),
      DeltaZ = cms.double( 3. ),
      maxZ0 = cms.double ( 15. ) ,    # in cm
      maxEta = cms.double ( 2.4 ) ,

@@ -83,7 +83,7 @@ trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.g
   Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
   Purity_cut = iConfig.getParameter<bool>("Cut");
   MVA_cut = iConfig.getParameter<bool>("MVACut");
-  outputname = iConfig.getParameter<std::string>("L1METTag");
+  outputname = iConfig.getParameter<std::string>("L1TrkMETTag");
 
   produces<TkEtMissCollection>(outputname);
 }
@@ -146,11 +146,12 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     float bendchi2 = trackIter->stubPtConsistency();
     float z0  = trackIter->POCA().z();
 
-    if (Purity_cut) {
+    if (pt < minPt) continue;
+    if (fabs(z0) > maxZ0) continue;
+    if (fabs(eta) > maxEta) continue;
 
-      if (pt < minPt) continue;
-      if (fabs(z0) > maxZ0) continue;
-      if (fabs(eta) > maxEta) continue;
+    if (Purity_cut) {
+      
       if (chi2dof > chi2dofMax) continue;
       if (bendchi2 > bendchi2Max) continue;
 

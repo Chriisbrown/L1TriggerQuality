@@ -77,19 +77,37 @@ process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.L1TrackerEtMiss.L1METTag = cms.string("TrackMET")
+process.L1TrackerEtMiss.L1TrkMETTag = cms.string("TrkMet")
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
 process.L1TrackerEtMissPurityCut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.L1TrackerEtMissPurityCut.L1METTag = cms.string("TrackMETPurityCut")
+process.L1TrackerEtMissPurityCut.L1TrkMETTag = cms.string("CutTrkMet")
 process.pL1TrackerEtMissPurityCut =cms.Path(process.L1TrackerEtMissPurityCut)
 
 process.L1TrackerEtMissMVACut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
-process.L1TrackerEtMissMVACut.L1METTag = cms.string("TrackMETMVACut")
+process.L1TrackerEtMissMVACut.L1TrkMETTag = cms.string("MVATrkMet")
 process.L1TrackerEtMissMVACut.MVAThreshold = 0.3
 process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
 process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
+'''
+process.load('L1Trigger.L1CaloTrigger.Phase1L1TJets_cff')
+
+process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
+process.load('CalibCalorimetry.CaloTPG.CaloTPGTranscoder_cfi')
+
+
+process.load("L1Trigger.Phase2L1ParticleFlow.l1ParticleFlow_cff")
+process.pfTracksFromL1Tracks.L1TrackTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.pfTracksFromL1TracksHGCal.L1TrackTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+
+process.pPF = cms.Path(process.l1ParticleFlow)
+
+process.load("L1Trigger.Phase2L1ParticleFlow.l1pfJetMet_cff")
+process.pPFMET = cms.Path(process.l1PFMets)
+
+
+'''
 
 process.out = cms.OutputModule( "PoolOutputModule",
                                 fastCloning = cms.untracked.bool( False ),
@@ -99,7 +117,7 @@ process.out = cms.OutputModule( "PoolOutputModule",
                                 dataTier = cms.untracked.string('GEN-SIM')
                                 ),
                                 outputCommands = cms.untracked.vstring(
-#                            	"keep *",
+                            	"keep *",
      	                        "keep *_L1TrackerEtMiss*_*_*",
                                 "keep *_L1TrackerGenEtMiss*_*_*",
      	                        "keep *_VertexProducer_*_*",
@@ -115,4 +133,6 @@ process.schedule = cms.Schedule(
                                 process.pL1TrackerEtMissPurityCut,
                                 process.pL1TrackerEtMissMVACut,
                                 process.pL1TrackerGenEt,
+                                #process.pPF,
+                                #process.pPFMET,
                                 process.FEVToutput_step)
