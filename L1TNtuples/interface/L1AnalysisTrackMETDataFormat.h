@@ -21,7 +21,7 @@ namespace L1Analysis
     void Reset()
     {
       GenMet =0;
-      TrkMe = 0;
+      TrkMet = 0;
       CutTrkMet = 0;
       MVATrkMet = 0;
     }
