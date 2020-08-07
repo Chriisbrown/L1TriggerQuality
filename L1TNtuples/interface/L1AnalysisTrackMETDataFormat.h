@@ -9,7 +9,7 @@
 //-------------------------------------------------------------------------------
 
 
-#include <vector>
+
 
 namespace L1Analysis
 {
@@ -20,16 +20,16 @@ namespace L1Analysis
 
     void Reset()
     {
-      GenMet.clear();
-      TrkMet.clear();
-      CutTrkMet.clear();
-      MVATrkMet.clear();
+      GenMet =0;
+      TrkMe = 0;
+      CutTrkMet = 0;
+      MVATrkMet = 0;
     }
 
-    std::vector<double> GenMet;
-    std::vector<double> TrkMet;
-    std::vector<double> CutTrkMet;
-    std::vector<double> MVATrkMet;
+    double GenMet;
+    double TrkMet;
+    double CutTrkMet;
+    double MVATrkMet;
 
   }; 
 }
