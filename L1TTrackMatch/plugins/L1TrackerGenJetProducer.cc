@@ -53,15 +53,14 @@ using namespace std;
 //                          //
 //////////////////////////////
 
-class L1TrackerJetProducer : public edm::EDProducer
+class L1TrackerGenJetProducer : public edm::EDProducer
 {
 public:
 
-  typedef TTTrack< Ref_Phase2TrackerDigi_ >  L1TTTrackType;
-  typedef std::vector< L1TTTrackType > L1TTTrackCollectionType;
+  typedef std::vector< TrackingParticle > L1TTTrackCollectionType;
 
-  explicit L1TrackerJetProducer(const edm::ParameterSet&);
-  ~L1TrackerJetProducer();
+  explicit L1TrackerGenJetProducer(const edm::ParameterSet&);
+  ~L1TrackerGenJetProducer();
 
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
@@ -91,23 +90,19 @@ private:
   bool doTightChi2;
   double BendConsistency;
 
-  bool Purity_cut;
-  bool MVA_cut;
-  float Threshold;
-
   std::string outputname;
 
 
   //need PVtx here
-  const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
-  edm::EDGetTokenT<VertexCollection>PVertexToken;
+  const edm::EDGetTokenT< std::vector< TrackingParticle > > TrackingParticleToken_;
+  const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
 };
 
 //////////////
 // constructor
-L1TrackerJetProducer::L1TrackerJetProducer(const edm::ParameterSet& iConfig) :
-trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.getParameter<edm::InputTag>("L1TrackInputTag"))),
-PVertexToken(consumes<VertexCollection>(iConfig.getParameter<edm::InputTag>("L1PrimaryVertexTag")))
+L1TrackerGenJetProducer::L1TrackerGenJetProducer(const edm::ParameterSet& iConfig) :
+TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag"))),
+TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag")))
 {
 
   
@@ -124,36 +119,33 @@ PVertexToken(consumes<VertexCollection>(iConfig.getParameter<edm::InputTag>("L1P
   doTightChi2 = iConfig.getParameter<bool>("doTightChi2");
   BendConsistency=iConfig.getParameter<double>("BendConsistency");
 
-  Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
-  Purity_cut = iConfig.getParameter<bool>("Cut");
-  MVA_cut = iConfig.getParameter<bool>("MVACut");
   outputname = iConfig.getParameter<std::string>("L1TrkJetTag");
   produces<TkJetCollection>(outputname);
 }
 
 /////////////
 // destructor
-L1TrackerJetProducer::~L1TrackerJetProducer() {
+L1TrackerGenJetProducer::~L1TrackerGenJetProducer() {
 }
 
 ///////////
 // producer
-void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
+void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   // ----------------------------------------------------------------------------------------------
   // output container
   // ----------------------------------------------------------------------------------------------
 
-  std::unique_ptr<TkJetCollection> L1TrackerJets(new TkJetCollection);
+  std::unique_ptr<TkJetCollection> L1TrackerGenJets(new TkJetCollection);
 
 
   // ----------------------------------------------------------------------------------------------
   // retrieve input containers
   // ----------------------------------------------------------------------------------------------
   // L1 tracks
-  edm::Handle< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > TTTrackHandle;
-  iEvent.getByToken(trackToken, TTTrackHandle);
-  std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >::const_iterator iterL1Track;
+  edm::Handle< std::vector< TrackingParticle > > TrackingParticleHandle;
+  iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
+  L1TTTrackCollectionType::const_iterator trackIter;
 
   // Tracker Topology
   edm::ESHandle<TrackerTopology> tTopoHandle_;
@@ -169,45 +161,64 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
   double mMagneticFieldStrength = theMagneticField->inTesla(GlobalPoint(0,0,0)).z();
   const TrackerGeometry* const theTrackerGeom = tGeomHandle.product();
   
-  edm::Handle<VertexCollection >TkPrimaryVertexHandle;
-  iEvent.getByToken(PVertexToken, TkPrimaryVertexHandle);
+  edm::Handle< std::vector< TrackingVertex > > TrackingVertexHandle;
+  iEvent.getByToken(TrackingVertexToken_, TrackingVertexHandle);
   fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, CONESize);
   std::vector<fastjet::PseudoJet>  JetInputs;
 
   unsigned int this_l1track = 0;
   for ( iterL1Track = TTTrackHandle->begin(); iterL1Track != TTTrackHandle->end(); iterL1Track++ ) {
     ++this_l1track;
-    if (Purity_cut) {
 
-      if(fabs(iterL1Track->POCA().z())>TRK_ZMAX)continue;
-      if(fabs(iterL1Track->momentum().eta())>TRK_ETAMAX)continue;
-      if(iterL1Track->momentum().perp()<TRK_PTMIN)continue;
-      std::vector< edm::Ref< edmNew::DetSetVector< TTStub< Ref_Phase2TrackerDigi_ > >, TTStub< Ref_Phase2TrackerDigi_ > > >  theStubs = iterL1Track -> getStubRefs() ;	    if(theStubs.size()<TRK_NSTUBMIN)continue;
-      float chi2ndof=(iterL1Track->chi2()/(2*theStubs.size() - L1Tk_nPar));
-      if(chi2ndof>TRK_CHI2MAX)continue;
-      float trk_bstubPt=StubPtConsistency::getConsistency(TTTrackHandle->at(this_l1track-1), theTrackerGeom, tTopo,mMagneticFieldStrength,4);//trkPtr->getStubPtConsis
-      if(trk_bstubPt>BendConsistency)continue;
+    float pt = trackIter->pt();
+    float eta = trackIter->eta();
+    float phi = trackIter->phi();
+
+    float tmp_tp_vz  = trackIter->vz();
+    float tmp_tp_vx  = trackIter->vx();
+    float tmp_tp_vy  = trackIter->vy();
+
+    float tmp_tp_z0_prod = tmp_tp_vz;
+    
+    
+    // ---------------------------------------------------------------------------------------------
+    // get d0/z0 propagated back to the IP
+    
+    float tmp_tp_t = tan(2.0*atan(1.0)-2.0*atan(exp(-eta)));
+
+    float delx = -tmp_tp_vx;
+    float dely = -tmp_tp_vy;
+
+    float A = 0.01*0.5696;
+    float Kmagnitude = A / pt;
+    
+    float tmp_tp_charge = trackIter->charge();
+    float K = Kmagnitude * tmp_tp_charge;
+    float d = 0;
+
+    float tmp_tp_x0p = delx - (d + 1./(2. * K)*sin(phi));
+    float tmp_tp_y0p = dely + (d + 1./(2. * K)*cos(phi));
+    float tmp_tp_rp = sqrt(tmp_tp_x0p*tmp_tp_x0p + tmp_tp_y0p*tmp_tp_y0p);
+    float tmp_tp_d0 = tmp_tp_charge*tmp_tp_rp - (1. / (2. * K));
+
+    tmp_tp_d0 = tmp_tp_d0*(-1); //fix d0 sign
+
+    static double pi = 4.0*atan(1.0);
+    float delphi = phi-atan2(-K*tmp_tp_x0p,K*tmp_tp_y0p);
+    if (delphi<-pi) delphi+=2.0*pi;
+    if (delphi>pi) delphi-=2.0*pi;
+    float z0 = tmp_tp_vz+tmp_tp_t*delphi/(2.0*K);
+
+
+    if(z0>TRK_ZMAX)continue;
+    if(eta>TRK_ETAMAX)continue;
+    if(pt<TRK_PTMIN)continue;
+
       
-      int tmp_trk_nstubPS = 0;
-      for (unsigned int istub=0; istub<(unsigned int)theStubs.size(); istub++) {
-        DetId detId( theStubs.at(istub)->getDetId() );
-        bool tmp_isPS = false;
-        if (detId.det() == DetId::Detector::Tracker) {
-          if (detId.subdetId() == StripSubdetector::TOB && tTopo->tobLayer(detId) <= 3)     tmp_isPS = true;
-          else if (detId.subdetId() == StripSubdetector::TID && tTopo->tidRing(detId) <= 9) tmp_isPS = true;
-        }
-        if (tmp_isPS) tmp_trk_nstubPS++;
-      }
-      if(tmp_trk_nstubPS<TRK_NSTUBPSMIN)continue;
+    
 
-    if (MVA_cut) {
-      float quality = trackIter->trkMVA1();
-      if (quality < Threshold) continue;
-    }
-
-
-    if(doTightChi2 && (iterL1Track->momentum().perp()>20 && chi2ndof>5))continue;
-    double DeltaZtoVtx=fabs(TkPrimaryVertexHandle->begin()->z0()-iterL1Track->POCA().z());
+    
+    double DeltaZtoVtx=fabs(TrackingVertexHandle->begin()->position().Z()-z0);
     if(DeltaZtoVtx>DeltaZ0Cut)continue;
 
     fastjet::PseudoJet psuedoJet(iterL1Track->momentum().x(), iterL1Track->momentum().y(), iterL1Track->momentum().z(), iterL1Track->momentum().mag());
@@ -234,31 +245,31 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
     avgZ=avgZ/sumpt;
     edm::Ref< JetBxCollection > jetRef ;
     TkJet trkJet(jetP4, jetRef, L1TrackPtrs, avgZ);
-    L1TrackerJets->push_back(trkJet);
+    L1TrackerGenJets->push_back(trkJet);
 
   }
 
 
-  iEvent.put( std::move(L1TrackerJets), outputname);
+  iEvent.put( std::move(L1TrackerGenJets), outputname);
 
 }
 
 
 // ------------ method called once each job just before starting event loop  ------------
 void
-L1TrackerJetProducer::beginJob()
+L1TrackerGenJetProducer::beginJob()
 {
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 void
-L1TrackerJetProducer::endJob() {
+L1TrackerGenJetProducer::endJob() {
 }
 
 // ------------ method called when starting to processes a run  ------------
 /*
 void
-L1TrackerJetProducer::beginRun(edm::Run& iRun, edm::EventSetup const& iSetup)
+L1TrackerGenJetProducer::beginRun(edm::Run& iRun, edm::EventSetup const& iSetup)
 {
 }
 */
@@ -266,7 +277,7 @@ L1TrackerJetProducer::beginRun(edm::Run& iRun, edm::EventSetup const& iSetup)
 // ------------ method called when ending the processing of a run  ------------
 /*
 void
-L1TrackerJetProducer::endRun(edm::Run&, edm::EventSetup const&)
+L1TrackerGenJetProducer::endRun(edm::Run&, edm::EventSetup const&)
 {
 }
 */
@@ -274,7 +285,7 @@ L1TrackerJetProducer::endRun(edm::Run&, edm::EventSetup const&)
 // ------------ method called when starting to processes a luminosity block  ------------
 /*
 void
-L1TrackerJetProducer::beginLuminosityBlock(edm::LuminosityBlock&, edm::EventSetup const&)
+L1TrackerGenJetProducer::beginLuminosityBlock(edm::LuminosityBlock&, edm::EventSetup const&)
 {
 }
 */
@@ -282,14 +293,14 @@ L1TrackerJetProducer::beginLuminosityBlock(edm::LuminosityBlock&, edm::EventSetu
 // ------------ method called when ending the processing of a luminosity block  ------------
 /*
 void
-L1TrackerJetProducer::endLuminosityBlock(edm::LuminosityBlock&, edm::EventSetup const&)
+L1TrackerGenJetProducer::endLuminosityBlock(edm::LuminosityBlock&, edm::EventSetup const&)
 {
 }
 */
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
-L1TrackerJetProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+L1TrackerGenJetProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
@@ -298,4 +309,4 @@ L1TrackerJetProducer::fillDescriptions(edm::ConfigurationDescriptions& descripti
 }
 
 //define this as a plug-in
-DEFINE_FWK_MODULE(L1TrackerJetProducer);
+DEFINE_FWK_MODULE(L1TrackerGenJetProducer);

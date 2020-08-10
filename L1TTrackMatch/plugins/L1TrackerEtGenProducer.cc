@@ -65,7 +65,7 @@ TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getP
 TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag")))
 {
   DeltaZ = (float)iConfig.getParameter<double>("DeltaZ");
-  outputname = iConfig.getParameter<std::string>("L1METTag");
+  outputname = iConfig.getParameter<std::string>("L1TrkMETTag");
   maxZ0 = (float)iConfig.getParameter<double>("maxZ0");
   minPt = (float)iConfig.getParameter<double>("minPt");
   maxPt = (float)iConfig.getParameter<double>("maxPt");
