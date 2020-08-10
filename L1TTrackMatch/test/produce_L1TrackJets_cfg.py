@@ -99,12 +99,12 @@ process.pL1TrackerJets=cms.Path(process.L1TrackerJets)
 
 process.L1TrackerJetsPurityCut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.L1TrackerJetsPurityCut.L1TrkJetTag = cms.string("CutL1TrackerJets")
-process.pL1TrackerJetsCut =cms.Path(process.L1TrackerJetsPurityCut)
+process.pL1TrackerJetsPurityCut =cms.Path(process.L1TrackerJetsPurityCut)
 
 process.L1TrackerJetsMVACut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
 process.L1TrackerJetsMVACut.L1TrkJetTag = cms.string("MVAL1TrackerJets")
 process.L1TrackerJetsMVACut.MVAThreshold = 0.3
-process.pL1TrackerJetsMVACut =cms.Path(process.L1L1TrackerJetsMVACut)
+process.pL1TrackerJetsMVACut =cms.Path(process.L1TrackerJetsMVACut)
 
 
 
@@ -140,7 +140,7 @@ process.out = cms.OutputModule( "PoolOutputModule",
                                 dataTier = cms.untracked.string('GEN-SIM')
                                 ),
                                 outputCommands = cms.untracked.vstring(
-                            	"keep *",
+                            	"keep *_L1TrackerJets*_*_*",
      	                        "keep *_L1TrackerEtMiss*_*_*",
                                 "keep *_L1TrackerGenEtMiss*_*_*",
      	                        "keep *_VertexProducer_*_*",

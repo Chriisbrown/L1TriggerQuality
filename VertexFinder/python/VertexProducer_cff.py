@@ -36,10 +36,10 @@ VertexProducer = cms.EDProducer('VertexProducer',
         VxMinTrackPt   = cms.double(2.5),
         GenVxSmear = cms.double(0.0),
         # Use track weights from CNN
-        UseCNNTrkWeights = cms.bool(True),
+        UseCNNTrkWeights = cms.bool(False),
         CNNTrackWeightGraph = cms.string("L1Trigger/VertexFinder/data/cnnTrkWeight.pb"),
         # Associated tracks to vertex with CNN
-        DoCNNTrackAssociation = cms.bool(True),
+        DoCNNTrackAssociation = cms.bool(False),
         CNNGraph = cms.string("L1Trigger/VertexFinder/data/cnnTrkAssoc_v2.pb")
     ),
   # Debug printout
