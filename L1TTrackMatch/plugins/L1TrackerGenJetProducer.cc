@@ -170,7 +170,7 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   std::vector<fastjet::PseudoJet>  JetInputs;
 
   unsigned int this_l1track = 0;
-  for ( iterL1Track = TTTrackHandle->begin(); iterL1Track != TTTrackHandle->end(); iterL1Track++ ) {
+  for ( iterL1Track = TrackingParticleHandle->begin(); iterL1Track != TrackingParticleHandle->end(); iterL1Track++ ) {
     ++this_l1track;
 
     float pt = iterL1Track->pt();
@@ -224,7 +224,7 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     double DeltaZtoVtx=fabs(TrackingVertexHandle->begin()->position().Z()-z0);
     if(DeltaZtoVtx>DeltaZ0Cut)continue;
 
-    fastjet::PseudoJet psuedoJet(iterL1Track->momentum().x(), iterL1Track->momentum().y(), iterL1Track->momentum().z(), iterL1Track->momentum().mag());
+    fastjet::PseudoJet psuedoJet(iterL1Track->px(), iterL1Track->py(), iterL1Track->pz(), iterL1Track->p());
     JetInputs.push_back(psuedoJet);	//input tracks for clustering
     JetInputs.back().set_user_index(this_l1track-1);//save track index in the collection
   }
@@ -240,7 +240,7 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
 
     for(unsigned int i=0; i<fjConstituents.size(); ++i){
       auto index =fjConstituents[i].user_index();
-      edm::Ptr< L1TTTrackType > trkPtr(TTTrackHandle, index) ;
+      edm::Ptr< L1TTTrackType > trkPtr(TrackingParticleHandle, index) ;
       L1TrackPtrs.push_back(trkPtr); //L1Tracks in the jet
       sumpt=sumpt+trkPtr->momentum().perp();
       avgZ=avgZ+trkPtr->momentum().perp()*trkPtr->POCA().z();
