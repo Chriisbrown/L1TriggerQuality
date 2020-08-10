@@ -12,7 +12,7 @@ L1Analysis::L1AnalysisTrackJet::~L1AnalysisTrackJet()
 
 
 
-void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<reco::TkJet> > TrackJets, unsigned maxL1Extra)
+void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<TkJet> > TrackJets, unsigned maxL1Extra)
 {
 
   for (unsigned int i=0; i<TrackJets->size() && l1extra_.nTrackerJets<maxL1Extra; i++){
@@ -27,7 +27,7 @@ void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<reco:
   }
 }
 
-void L1Analysis::L1AnalysisPhaseIPFJet::SetGenJet(const edm::Handle<reco::GenJetCollection> genJets, unsigned maxL1Extra)
+void L1Analysis::L1AnalysisTrackJet::SetGenJet(const edm::Handle<reco::GenJetCollection> genJets, unsigned maxL1Extra)
 {
 
   reco::GenJetCollection::const_iterator genJetItr = genJets->begin();
