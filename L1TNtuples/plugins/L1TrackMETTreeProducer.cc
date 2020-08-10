@@ -30,6 +30,8 @@
 
 #include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
 #include "DataFormats/L1TCorrelator/interface/TkEtMissFwd.h"
+#include "DataFormats/METReco/interface/GenMET.h"
+#include "DataFormats/METReco/interface/GenMETFwd.h"
 
 // ROOT output stuff
 #include "FWCore/ServiceRegistry/interface/Service.h"
@@ -67,7 +69,7 @@ private:
   // tree
   TTree * tree_;
 
-  edm::EDGetTokenT<l1t::TkEtMissCollection> genMET_;
+  edm::EDGetTokenT<l1t::GenMETCollection> genMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> TkMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> CutTkMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> MVATkMET_;
@@ -77,7 +79,7 @@ private:
 
 L1TrackMETTreeProducer::L1TrackMETTreeProducer(const edm::ParameterSet& iConfig){
 
-  genMET_ = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("genMETToken"));
+  genMET_ = consumes<reco::GenMETCollection>(iConfig.getParameter<edm::InputTag>("genMETToken"));
   TkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("TkMETToken"));
   CutTkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("CutTkMETToken"));
   MVATkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("MVATkMETToken"));
@@ -113,11 +115,11 @@ L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
  l1Extra->Reset();
 
 
-  edm::Handle<l1t::TkEtMissCollection> genMET;
+  edm::Handle<reco::GenMETCollection> genMET;
   iEvent.getByToken(genMET_, genMET);
 
   if (genMET.isValid()){ 
-    l1Extra->SetTrackMET(genMET,"Gen");
+    l1Extra->SetGenMET(genMET);
   } else {
     edm::LogWarning("MissingProduct") << "Gen MET not found. Branch will not be filled" << std::endl;
   }

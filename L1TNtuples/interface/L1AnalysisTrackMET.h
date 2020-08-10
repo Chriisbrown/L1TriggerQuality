@@ -10,6 +10,8 @@
 
 #include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
 #include "DataFormats/L1TCorrelator/interface/TkEtMissFwd.h"
+#include "DataFormats/METReco/interface/GenMET.h"
+#include "DataFormats/METReco/interface/GenMETFwd.h"
 #include "L1Trigger/L1TNtuples/interface/L1AnalysisTrackMETDataFormat.h"
 
 namespace L1Analysis
@@ -23,6 +25,7 @@ namespace L1Analysis
 
     // Add new MET collections 
     void SetTrackMET  (const edm::Handle<l1t::TkEtMissCollection >  MET, std::string name);
+    void SetGenMET (const edm::Handle<reco::GenMETCollection >  MET, std::string name);
 
     L1AnalysisTrackMETDataFormat * getData() {return &l1extra_;}
 
