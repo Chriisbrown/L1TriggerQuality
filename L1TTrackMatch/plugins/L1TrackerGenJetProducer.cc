@@ -235,15 +235,56 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     math::XYZTLorentzVector jetP4(JetOutputs[ijet].px(),JetOutputs[ijet].py(),JetOutputs[ijet].pz(),JetOutputs[ijet].modp());
     float sumpt=0;
     float avgZ=0;
-    std::vector< edm::Ptr< L1TTTrackType > > L1TrackPtrs;
+    std::vector< edm::Ptr< TrackingParticle > > L1TrackPtrs;
     std::vector<fastjet::PseudoJet> fjConstituents =fastjet::sorted_by_pt(cs.constituents(JetOutputs[ijet]));
 
     for(unsigned int i=0; i<fjConstituents.size(); ++i){
       auto index =fjConstituents[i].user_index();
-      edm::Ptr< L1TTTrackType > trkPtr(TrackingParticleHandle, index) ;
+      edm::Ptr< TrackingParticle > trkPtr(TrackingParticleHandle, index) ;
       L1TrackPtrs.push_back(trkPtr); //L1Tracks in the jet
-      sumpt=sumpt+trkPtr->momentum().perp();
-      avgZ=avgZ+trkPtr->momentum().perp()*trkPtr->POCA().z();
+      sumpt=sumpt+trkPtr->pt();
+
+      float pt = trkPtr->pt();
+      float eta = trkPtr->eta();
+      float phi = trkPtr->phi();
+
+      float tmp_tp_vz  = trkPtr->vz();
+      float tmp_tp_vx  = trkPtr->vx();
+      float tmp_tp_vy  = trkPtr->vy();
+
+      float tmp_tp_z0_prod = tmp_tp_vz;
+      
+      
+      // ---------------------------------------------------------------------------------------------
+      // get d0/z0 propagated back to the IP
+      
+      float tmp_tp_t = tan(2.0*atan(1.0)-2.0*atan(exp(-eta)));
+
+      float delx = -tmp_tp_vx;
+      float dely = -tmp_tp_vy;
+
+      float A = 0.01*0.5696;
+      float Kmagnitude = A / pt;
+      
+      float tmp_tp_charge = iterL1Track->charge();
+      float K = Kmagnitude * tmp_tp_charge;
+      float d = 0;
+
+      float tmp_tp_x0p = delx - (d + 1./(2. * K)*sin(phi));
+      float tmp_tp_y0p = dely + (d + 1./(2. * K)*cos(phi));
+      float tmp_tp_rp = sqrt(tmp_tp_x0p*tmp_tp_x0p + tmp_tp_y0p*tmp_tp_y0p);
+      float tmp_tp_d0 = tmp_tp_charge*tmp_tp_rp - (1. / (2. * K));
+
+      tmp_tp_d0 = tmp_tp_d0*(-1); //fix d0 sign
+
+      static double pi = 4.0*atan(1.0);
+      float delphi = phi-atan2(-K*tmp_tp_x0p,K*tmp_tp_y0p);
+      if (delphi<-pi) delphi+=2.0*pi;
+      if (delphi>pi) delphi-=2.0*pi;
+      float z0 = tmp_tp_vz+tmp_tp_t*delphi/(2.0*K);
+      
+
+      avgZ=avgZ+pt*z0;
     }
     avgZ=avgZ/sumpt;
     edm::Ref< JetBxCollection > jetRef ;
