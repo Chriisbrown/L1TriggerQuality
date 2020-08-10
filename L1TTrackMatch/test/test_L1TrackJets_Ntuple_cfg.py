@@ -49,12 +49,12 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
 process.load("L1Trigger.L1TNtuples.l1TrackJetTreeProducer_cfi")
-
+process.load("L1Trigger.L1TNtuples.l1TrackMETTreeProducer_cfi")
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string('L1Ntuple.root')
 )
 
 
-process.p = cms.Path(process.l1TrackJetTree)
+process.p = cms.Path(process.l1TrackJetTree,process.l1TrackMETTree)
   

@@ -32,8 +32,8 @@ options.parseArguments()
 
 
 #--- input and output
-inputFiles = []
-#inputFiles = ['/store/relval/CMSSW_11_1_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU25ns_110X_mcRun4_realistic_v3_2026D49PU200-v1/10000/55A5DB80-84E7-2746-819E-2ECAFB126BD2.root']    
+#inputFiles = []
+inputFiles = ['/store/relval/CMSSW_11_1_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU25ns_110X_mcRun4_realistic_v3_2026D49PU200-v1/10000/55A5DB80-84E7-2746-819E-2ECAFB126BD2.root']    
 for filePath in options.inputFiles:
     if filePath.endswith(".root"):
         inputFiles.append(filePath)
@@ -45,8 +45,8 @@ for filePath in options.inputFiles:
 ############################################################
 
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
-
+#process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10))
 
 process.source = cms.Source ("PoolSource",
                             fileNames = cms.untracked.vstring(inputFiles),
@@ -140,6 +140,7 @@ process.out = cms.OutputModule( "PoolOutputModule",
                                 dataTier = cms.untracked.string('GEN-SIM')
                                 ),
                                 outputCommands = cms.untracked.vstring(
+                                "keep reco*_*_*_*",
                             	"keep *_L1TrackerJets*_*_*",
      	                        "keep *_L1TrackerEtMiss*_*_*",
                                 "keep *_L1TrackerGenEtMiss*_*_*",
@@ -160,7 +161,7 @@ process.schedule = cms.Schedule(
                                 process.pL1TrackerJets,
                                 process.pL1TrackerJetsPurityCut,
                                 process.pL1TrackerJetsMVACut,
-                                process.pL1TrackerGenJets,
+                                #process.pL1TrackerGenJets,
                                 #process.pPF,
                                 #process.pPFMET,
                                 process.FEVToutput_step)
