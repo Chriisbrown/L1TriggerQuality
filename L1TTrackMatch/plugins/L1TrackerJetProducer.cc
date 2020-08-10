@@ -177,6 +177,7 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
   unsigned int this_l1track = 0;
   for ( iterL1Track = TTTrackHandle->begin(); iterL1Track != TTTrackHandle->end(); iterL1Track++ ) {
     ++this_l1track;
+    
     if (Purity_cut) {
 
       if(fabs(iterL1Track->POCA().z())>TRK_ZMAX)continue;
@@ -199,14 +200,15 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
         if (tmp_isPS) tmp_trk_nstubPS++;
       }
       if(tmp_trk_nstubPS<TRK_NSTUBPSMIN)continue;
-
+      if(doTightChi2 && (iterL1Track->momentum().perp()>20 && chi2ndof>5))continue;
+    }
     if (MVA_cut) {
-      float quality = trackIter->trkMVA1();
+      float quality = iterL1Track->trkMVA1();
       if (quality < Threshold) continue;
     }
 
 
-    if(doTightChi2 && (iterL1Track->momentum().perp()>20 && chi2ndof>5))continue;
+    
     double DeltaZtoVtx=fabs(TkPrimaryVertexHandle->begin()->z0()-iterL1Track->POCA().z());
     if(DeltaZtoVtx>DeltaZ0Cut)continue;
 
