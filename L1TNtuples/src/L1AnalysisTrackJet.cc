@@ -12,7 +12,7 @@ L1Analysis::L1AnalysisTrackJet::~L1AnalysisTrackJet()
 
 
 
-void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<TkJet> > TrackJets, unsigned maxL1Extra)
+void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<l1t::TkJet> > TrackJets, unsigned maxL1Extra)
 {
 
   for (unsigned int i=0; i<TrackJets->size() && l1extra_.nTrackerJets<maxL1Extra; i++){

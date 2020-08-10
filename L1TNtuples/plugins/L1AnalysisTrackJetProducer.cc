@@ -69,14 +69,14 @@ private:
   TTree * tree_;
 
   edm::EDGetTokenT<reco::GenJetCollection> genJets_;
-  edm::EDGetTokenT<std::vector<TkJet>> TrackJets_;
+  edm::EDGetTokenT<std::vector<l1t::TkJet>> TrackJets_;
 
 };
 
 L1TrackJetTreeProducer::L1TrackJetTreeProducer(const edm::ParameterSet& iConfig){
 
   genJets_ = consumes<reco::GenJetCollection>(iConfig.getUntrackedParameter<edm::InputTag>("genJetToken"));
-  TrackPFJets_ = consumes<std::vector<TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJets"));
+  TrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJets"));
 
   maxL1Extra_ = iConfig.getParameter<unsigned int>("maxL1Extra");
 
@@ -124,7 +124,7 @@ L1TrackJetTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
 
 
-  edm::Handle<std::vector<TkJet>> TrackJets;
+  edm::Handle<std::vector<l1t::TkJet>> TrackJets;
   iEvent.getByToken(TrackJets_,TrackJets);
   if (TrackJets.isValid()){
     l1Extra->SetTrackJet(TrackJets, maxL1Extra_);
