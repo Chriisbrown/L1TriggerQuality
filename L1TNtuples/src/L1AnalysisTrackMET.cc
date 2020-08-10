@@ -15,13 +15,13 @@ void L1Analysis::L1AnalysisTrackMET::SetTrackMET(const edm::Handle<l1t::TkEtMiss
 
   for (unsigned int i=0; i<TkEtMiss->size(); i++){
     if (name == "Track")
-      l1extra_.TksumEt.push_back(TkEtMiss->at(i).etMiss());
+      l1extra_.TrkMet.push_back(TkEtMiss->at(i).etMiss());
     if (name == "Cut")
-      l1extra_.CutsumEt.push_back(TkEtMiss->at(i).etMiss());
+      l1extra_.CutTrkMet.push_back(TkEtMiss->at(i).etMiss());
     if (name == "MVA")
-      l1extra_.MVAsumEt.push_back(TkEtMiss->at(i).etMiss());
+      l1extra_.MVATrkMet.push_back(TkEtMiss->at(i).etMiss());
     if (name == "Gen")
-      l1extra_.GensumEt.push_back(TkEtMiss->at(i).etMiss());
+      l1extra_.GenMet.push_back(TkEtMiss->at(i).etMiss());
       
 }
 }
