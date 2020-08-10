@@ -25,6 +25,9 @@
 #include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
 #include "L1Trigger/TrackTrigger/interface/StubPtConsistency.h"
 
+#include "SimDataFormats/TrackingAnalysis/interface/TrackingParticle.h"
+#include "SimDataFormats/TrackingAnalysis/interface/TrackingVertex.h"
+
 #include "DataFormats/L1TCorrelator/interface/TkJet.h"
 #include "DataFormats/L1TCorrelator/interface/TkJetFwd.h"
 #include "DataFormats/L1TVertex/interface/Vertex.h"
@@ -145,7 +148,7 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   // L1 tracks
   edm::Handle< std::vector< TrackingParticle > > TrackingParticleHandle;
   iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
-  L1TTTrackCollectionType::const_iterator trackIter;
+  L1TTTrackCollectionType::const_iterator iterL1Track;
 
   // Tracker Topology
   edm::ESHandle<TrackerTopology> tTopoHandle_;
@@ -170,13 +173,13 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   for ( iterL1Track = TTTrackHandle->begin(); iterL1Track != TTTrackHandle->end(); iterL1Track++ ) {
     ++this_l1track;
 
-    float pt = trackIter->pt();
-    float eta = trackIter->eta();
-    float phi = trackIter->phi();
+    float pt = iterL1Track->pt();
+    float eta = iterL1Track->eta();
+    float phi = iterL1Track->phi();
 
-    float tmp_tp_vz  = trackIter->vz();
-    float tmp_tp_vx  = trackIter->vx();
-    float tmp_tp_vy  = trackIter->vy();
+    float tmp_tp_vz  = iterL1Track->vz();
+    float tmp_tp_vx  = iterL1Track->vx();
+    float tmp_tp_vy  = iterL1Track->vy();
 
     float tmp_tp_z0_prod = tmp_tp_vz;
     
@@ -192,7 +195,7 @@ void L1TrackerGenJetProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     float A = 0.01*0.5696;
     float Kmagnitude = A / pt;
     
-    float tmp_tp_charge = trackIter->charge();
+    float tmp_tp_charge = iterL1Track->charge();
     float K = Kmagnitude * tmp_tp_charge;
     float d = 0;
 
