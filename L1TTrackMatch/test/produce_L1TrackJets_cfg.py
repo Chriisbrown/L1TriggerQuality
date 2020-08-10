@@ -92,6 +92,26 @@ process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 
 
+process.load("L1Trigger.L1TTrackMatch.L1TrackerJetProducer_cfi")
+process.L1TrackerJets.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerJets.L1TrkJetTag = cms.string("L1TrackerJets")
+process.pL1TrackerJets=cms.Path(process.L1TrackerJets)
+
+process.L1TrackerJetsPurityCut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerJetsPurityCut.L1TrkJetTag = cms.string("CutL1TrackerJets")
+process.pL1TrackerJetsCut =cms.Path(process.L1TrackerJetsPurityCut)
+
+process.L1TrackerJetsMVACut.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL) 
+process.L1TrackerJetsMVACut.L1TrkJetTag = cms.string("MVAL1TrackerJets")
+process.L1TrackerJetsMVACut.MVAThreshold = 0.3
+process.pL1TrackerJetsMVACut =cms.Path(process.L1L1TrackerJetsMVACut)
+
+
+
+#process.pL1TrackerGenJets =cms.Path(process.L1TrackerGenJets)
+
+
+
 
 '''
 process.load('L1Trigger.L1CaloTrigger.Phase1L1TJets_cff')
@@ -136,6 +156,11 @@ process.schedule = cms.Schedule(
                                 process.pL1TrackerEtMissPurityCut,
                                 process.pL1TrackerEtMissMVACut,
                                 process.pL1TrackerGenEt,
+
+                                process.pL1TrackerJets,
+                                process.pL1TrackerJetsPurityCut,
+                                process.pL1TrackerJetsMVACut,
+                                process.pL1TrackerGenJets,
                                 #process.pPF,
                                 #process.pPFMET,
                                 process.FEVToutput_step)
