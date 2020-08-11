@@ -136,18 +136,18 @@ L1TrackJetTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     edm::LogWarning("MissingProduct") << "TrackJet Jet not found. Branch will not be filled" << std::endl;
   }
 
-  edm::Handle<std::vector<l1t::TkJet>> TrackJets;
-  iEvent.getByToken(CutTrackJets_,TrackJets);
+  edm::Handle<std::vector<l1t::TkJet>> CutTrackJets;
+  iEvent.getByToken(CutTrackJets_,CutTrackJets);
   if (TrackJets.isValid()){
-    l1Extra->SetTrackJet(TrackJets, maxL1Extra_,"Cut");
+    l1Extra->SetTrackJet(CutTrackJets, maxL1Extra_,"Cut");
   } else {
     edm::LogWarning("MissingProduct") << "Cut TrackJet Jet not found. Branch will not be filled" << std::endl;
   }
 
-  edm::Handle<std::vector<l1t::TkJet>> TrackJets;
-  iEvent.getByToken(MVATrackJets_,TrackJets);
+  edm::Handle<std::vector<l1t::TkJet>> MVATrackJets;
+  iEvent.getByToken(MVATrackJets_,MVATrackJets);
   if (TrackJets.isValid()){
-    l1Extra->SetTrackJet(TrackJets, maxL1Extra_,"MVA");
+    l1Extra->SetTrackJet(MVATrackJets, maxL1Extra_,"MVA");
   } else {
     edm::LogWarning("MissingProduct") << "MVA TrackJet Jet not found. Branch will not be filled" << std::endl;
   }
