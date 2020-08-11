@@ -26,7 +26,7 @@ namespace L1Analysis
 
     // Add new PFJet collections 
     void SetGenJet  (const edm::Handle<reco::GenJetCollection > genJets,    unsigned maxL1Extra);
-    void SetTrackJet  (const      edm::Handle<l1t::TkJetCollection>  PFJet,    unsigned maxL1Extra);
+    void SetTrackJet  (const      edm::Handle<l1t::TkJetCollection>  PFJet,    unsigned maxL1Extra,string name);
 
     L1AnalysisTrackJetDataFormat * getData() {return &l1extra_;}
 

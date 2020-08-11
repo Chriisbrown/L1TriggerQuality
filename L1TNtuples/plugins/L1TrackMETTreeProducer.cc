@@ -69,7 +69,7 @@ private:
   // tree
   TTree * tree_;
 
-  edm::EDGetTokenT<l1t::GenMETCollection> genMET_;
+  edm::EDGetTokenT<reco::GenMETCollection> genMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> TkMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> CutTkMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> MVATkMET_;

@@ -25,7 +25,7 @@ namespace L1Analysis
 
     // Add new MET collections 
     void SetTrackMET  (const edm::Handle<l1t::TkEtMissCollection >  MET, std::string name);
-    void SetGenMET (const edm::Handle<reco::GenMETCollection >  MET, std::string name);
+    void SetGenMET (const edm::Handle<reco::GenMETCollection >  MET);
 
     L1AnalysisTrackMETDataFormat * getData() {return &l1extra_;}
 

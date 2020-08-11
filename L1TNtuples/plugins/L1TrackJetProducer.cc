@@ -70,6 +70,8 @@ private:
 
   edm::EDGetTokenT<reco::GenJetCollection> genJets_;
   edm::EDGetTokenT<std::vector<l1t::TkJet>> TrackJets_;
+  edm::EDGetTokenT<std::vector<l1t::TkJet>> CutTrackJets_;
+  edm::EDGetTokenT<std::vector<l1t::TkJet>> MVATrackJets_;
 
 };
 
@@ -77,6 +79,8 @@ L1TrackJetTreeProducer::L1TrackJetTreeProducer(const edm::ParameterSet& iConfig)
 
   genJets_ = consumes<reco::GenJetCollection>(iConfig.getUntrackedParameter<edm::InputTag>("genJetToken"));
   TrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJets"));
+  CutTrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJetsPurityCut"));
+  MVATrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJetsMVACut"));
 
   maxL1Extra_ = iConfig.getParameter<unsigned int>("maxL1Extra");
 
@@ -127,9 +131,25 @@ L1TrackJetTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
   edm::Handle<std::vector<l1t::TkJet>> TrackJets;
   iEvent.getByToken(TrackJets_,TrackJets);
   if (TrackJets.isValid()){
-    l1Extra->SetTrackJet(TrackJets, maxL1Extra_);
+    l1Extra->SetTrackJet(TrackJets, maxL1Extra_,"None");
   } else {
     edm::LogWarning("MissingProduct") << "TrackJet Jet not found. Branch will not be filled" << std::endl;
+  }
+
+  edm::Handle<std::vector<l1t::TkJet>> TrackJets;
+  iEvent.getByToken(CutTrackJets_,TrackJets);
+  if (TrackJets.isValid()){
+    l1Extra->SetTrackJet(TrackJets, maxL1Extra_,"Cut");
+  } else {
+    edm::LogWarning("MissingProduct") << "Cut TrackJet Jet not found. Branch will not be filled" << std::endl;
+  }
+
+  edm::Handle<std::vector<l1t::TkJet>> TrackJets;
+  iEvent.getByToken(MVATrackJets_,TrackJets);
+  if (TrackJets.isValid()){
+    l1Extra->SetTrackJet(TrackJets, maxL1Extra_,"MVA");
+  } else {
+    edm::LogWarning("MissingProduct") << "MVA TrackJet Jet not found. Branch will not be filled" << std::endl;
   }
 
 

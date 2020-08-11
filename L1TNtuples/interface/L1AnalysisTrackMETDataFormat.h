@@ -21,15 +21,32 @@ namespace L1Analysis
     void Reset()
     {
       GenMet =0;
+      GenMetPhi = 0;
+      GenSumEt = 0;
       TrkMet = 0;
+      TrkMetPhi = 0;
+      TrkSumEt = 0;
       CutTrkMet = 0;
+      CutTrkMetPhi = 0;
+      CutTrkSumEt = 0;
       MVATrkMet = 0;
+      MVATrkMetPhi = 0;
+      MVATrkSumEt = 0;
     }
 
     double GenMet;
+    double GenMetPhi;
+    double GenSumEt;
+    double TrkSumEt;
     double TrkMet;
+    double TrkMetPhi;
+    
     double CutTrkMet;
+    double CutTrkMetPhi;
+    double CutTrkSumEt;
     double MVATrkMet;
+    double MVATrkMetPhi;
+    double MVATrkSumEt;
 
   }; 
 }
