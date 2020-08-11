@@ -79,8 +79,8 @@ L1TrackJetTreeProducer::L1TrackJetTreeProducer(const edm::ParameterSet& iConfig)
 
   genJets_ = consumes<reco::GenJetCollection>(iConfig.getUntrackedParameter<edm::InputTag>("genJetToken"));
   TrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJets"));
-  CutTrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJetsPurityCut"));
-  MVATrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1TrackJetsMVACut"));
+  CutTrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1CutTrackJets"));
+  MVATrackJets_ = consumes<std::vector<l1t::TkJet> > (iConfig.getParameter<edm::InputTag>("l1MVATrackJets"));
 
   maxL1Extra_ = iConfig.getParameter<unsigned int>("maxL1Extra");
 
