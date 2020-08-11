@@ -17,14 +17,14 @@ void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<l1t::
   if (name == "None")
   {
 
-    for (unsigned int i=0; i<TrackJets->size() && l1extra_.nTrackerJets<maxL1Extra; i++){
+    for (unsigned int i=0; i<TrackJets->size() && l1extra_.nTrkJets<maxL1Extra; i++){
       if (TrackJets->at(i).pt()>0){
         if(TrackJets->at(i).pt()>30 && abs(TrackJets->at(i).eta())<2.4)
-    l1extra_.trackerJetHt += TrackJets->at(i).pt();
-        l1extra_.trackerJetEt .push_back(TrackJets->at(i).pt());
-        l1extra_.trackerJetEta.push_back(TrackJets->at(i).eta());
-        l1extra_.trackerJetPhi.push_back(TrackJets->at(i).phi());
-        l1extra_.nTrackerJets++;
+    l1extra_.TrkJetHt += TrackJets->at(i).pt();
+        l1extra_.TrkJetEt .push_back(TrackJets->at(i).pt());
+        l1extra_.TrkJetEta.push_back(TrackJets->at(i).eta());
+        l1extra_.TrkJetPhi.push_back(TrackJets->at(i).phi());
+        l1extra_.nTrkJets++;
       }
     }
   }
@@ -32,14 +32,14 @@ void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<l1t::
   if (name == "Cut")
   {
 
-    for (unsigned int i=0; i<TrackJets->size() && l1extra_.nCutTrackerJets<maxL1Extra; i++){
+    for (unsigned int i=0; i<TrackJets->size() && l1extra_.nCutTrkJets<maxL1Extra; i++){
       if (TrackJets->at(i).pt()>0){
         if(TrackJets->at(i).pt()>30 && abs(TrackJets->at(i).eta())<2.4)
-    l1extra_.CuttrackerJetHt += TrackJets->at(i).pt();
-        l1extra_.CuttrackerJetEt .push_back(TrackJets->at(i).pt());
-        l1extra_.CuttrackerJetEta.push_back(TrackJets->at(i).eta());
-        l1extra_.CuttrackerJetPhi.push_back(TrackJets->at(i).phi());
-        l1extra_.nCutTrackerJets++;
+    l1extra_.CutTrkJetHt += TrackJets->at(i).pt();
+        l1extra_.CutTrkJetEt .push_back(TrackJets->at(i).pt());
+        l1extra_.CutTrkJetEta.push_back(TrackJets->at(i).eta());
+        l1extra_.CutTrkJetPhi.push_back(TrackJets->at(i).phi());
+        l1extra_.nCutTrkJets++;
       }
     }
   }
@@ -47,14 +47,14 @@ void L1Analysis::L1AnalysisTrackJet::SetTrackJet(const edm::Handle< vector<l1t::
   if (name == "MVA")
   {
 
-    for (unsigned int i=0; i<TrackJets->size() && l1extra_.nMVATrackerJets<maxL1Extra; i++){
+    for (unsigned int i=0; i<TrackJets->size() && l1extra_.nMVATrkJets<maxL1Extra; i++){
       if (TrackJets->at(i).pt()>0){
         if(TrackJets->at(i).pt()>30 && abs(TrackJets->at(i).eta())<2.4)
-    l1extra_.MVAtrackerJetHt += TrackJets->at(i).pt();
-        l1extra_.MVAtrackerJetEt .push_back(TrackJets->at(i).pt());
-        l1extra_.MVAtrackerJetEta.push_back(TrackJets->at(i).eta());
-        l1extra_.MVAtrackerJetPhi.push_back(TrackJets->at(i).phi());
-        l1extra_.nMVATrackerJets++;
+    l1extra_.MVATrkJetHt += TrackJets->at(i).pt();
+        l1extra_.MVATrkJetEt .push_back(TrackJets->at(i).pt());
+        l1extra_.MVATrkJetEta.push_back(TrackJets->at(i).eta());
+        l1extra_.MVATrkJetPhi.push_back(TrackJets->at(i).phi());
+        l1extra_.nMVATrkJets++;
       }
     }
   }
@@ -67,11 +67,11 @@ void L1Analysis::L1AnalysisTrackJet::SetGenJet(const edm::Handle<reco::GenJetCol
   reco::GenJetCollection::const_iterator genJetEnd = genJets->end();
   for( ; genJetItr != genJetEnd ; ++genJetItr) {
     if(genJetItr->pt()>30 && abs(genJetItr->eta())<2.4)
-      l1extra_.genJetHt += genJetItr->pt();
-    l1extra_.genJetPt.push_back( genJetItr->pt() );
-    l1extra_.genJetEta.push_back( genJetItr->eta() );
-    l1extra_.genJetPhi.push_back( genJetItr->phi() );
-    l1extra_.genJetM.push_back( genJetItr->mass() );
+      l1extra_.GevJetHt += genJetItr->pt();
+    l1extra_.GenJetPt.push_back( genJetItr->pt() );
+    l1extra_.GenJetEta.push_back( genJetItr->eta() );
+    l1extra_.GenJetPhi.push_back( genJetItr->phi() );
+    l1extra_.GenJetM.push_back( genJetItr->mass() );
     l1extra_.nGenJet++;
   }
 }

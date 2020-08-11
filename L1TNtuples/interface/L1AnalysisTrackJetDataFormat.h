@@ -49,31 +49,31 @@ namespace L1Analysis
 
     }
 
-    unsigned short int nTrackerJets;
-    std::vector<double> trackerJetEt;
-    std::vector<double> trackerJetEta;
-    std::vector<double> trackerJetPhi;
-    double trackerJetHt;
+    unsigned short int nTrkJets;
+    std::vector<double> TrkJetEt;
+    std::vector<double> TrkJetEta;
+    std::vector<double> TrkJetPhi;
+    double TrkJetHt;
 
-    unsigned short int nCutTrackerJets;
-    std::vector<double> CuttrackerJetEt;
-    std::vector<double> CuttrackerJetEta;
-    std::vector<double> CuttrackerJetPhi;
-    double CuttrackerJetHt;
+    unsigned short int nCutTrkJets;
+    std::vector<double> CutTrkJetEt;
+    std::vector<double> CutTrkJetEta;
+    std::vector<double> CutTrkJetPhi;
+    double CutTrkJetHt;
 
-    unsigned short int nMVATrackerJets;
-    std::vector<double> MVAtrackerJetEt;
-    std::vector<double> MVAtrackerJetEta;
-    std::vector<double> MVAtrackerJetPhi;
-    double MVAtrackerJetHt;
+    unsigned short int nMVATrkJets;
+    std::vector<double> MVATrkJetEt;
+    std::vector<double> MVATrkJetEta;
+    std::vector<double> MVATrkJetPhi;
+    double MVATrkJetHt;
 
   
     int nGenJet;
-    std::vector<float> genJetPt;
-    std::vector<float> genJetEta;
-    std::vector<float> genJetPhi;
-    std::vector<float> genJetM;
-    double genJetHt;
+    std::vector<float> GenJetPt;
+    std::vector<float> GenJetEta;
+    std::vector<float> GenJetPhi;
+    std::vector<float> GenJetM;
+    double GenJetHt;
 
 
 
