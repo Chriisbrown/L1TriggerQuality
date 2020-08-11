@@ -21,30 +21,30 @@ namespace L1Analysis
     void Reset()
     {
 
-      nTrackerJets = 0;
-      trackerJetEt.clear();
-      trackerJetEta.clear();
-      trackerJetPhi.clear();
-      trackerJetHt = 0;
+      nTrkJets = 0;
+      TrkJetEt.clear();
+      TrkJetEta.clear();
+      TrkJetPhi.clear();
+      TrkJetHt = 0;
 
-      nCutTrackerJets = 0;
-      CuttrackerJetEt.clear();
-      CuttrackerJetEta.clear();
-      CuttrackerJetPhi.clear();
-      CuttrackerJetHt = 0;
+      nCutTrkJets = 0;
+      CutTrkJetEt.clear();
+      CutTrkJetEta.clear();
+      CutTrkJetPhi.clear();
+      CutTrkJetHt = 0;
 
-      nMVATrackerJets = 0;
-      MVAtrackerJetEt.clear();
-      MVAtrackerJetEta.clear();
-      MVAtrackerJetPhi.clear();
-      MVAtrackerJetHt = 0;
+      nMVATrkJets = 0;
+      MVATrkJetEt.clear();
+      MVATrkJetEta.clear();
+      MVATrkJetPhi.clear();
+      MVATrkJetHt = 0;
 
       nGenJet = 0;     
-      genJetPt.clear();
-      genJetEta.clear();
-      genJetPhi.clear();
-      genJetM.clear();
-      genJetHt = 0;
+      GenJetPt.clear();
+      GenJetEta.clear();
+      GenJetPhi.clear();
+      GenJetM.clear();
+      GenJetHt = 0;
 
 
     }
