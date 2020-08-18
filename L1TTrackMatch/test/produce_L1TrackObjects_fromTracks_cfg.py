@@ -67,8 +67,8 @@ process.TrackClassifier.L1TrackInputTag = cms.InputTag(L1TRK_NAME, L1TRK_LABEL)
 process.TrackClassifier.Algorithm = cms.string("NN")
 
 process.load("L1Trigger.TrackFindingTracklet.L1TrackletEmulationTracks_cff")
-process.TTTracksEmulation = cms.Path(process.L1HybridTracks)
-process.TTTracksEmulationWithTruth = cms.Path(process.L1HybridTracksWithAssociators*process.TrackClassifier)
+process.TTTracksEmulation = cms.Path(process.L1TrackletEmulationTracks)
+process.TTTracksEmulationWithTruth = cms.Path(process.L1TrackletEmulationTracksWithAssociators*process.TrackClassifier)
 
 L1TRKClass_NAME  = "TrackClassifier"
 L1TRKClass_LABEL = "Level1ClassTTTracks"
@@ -81,42 +81,52 @@ L1TRKClass_LABEL = "Level1ClassTTTracks"
 
 process.load("L1Trigger.L1TTrackMatch.L1TkPrimaryVertexProducer_cfi")
 process.L1TkPrimaryVertex.L1TrackInputTag(L1TRKClass_NAME, L1TRKClass_LABEL)
+process.L1TkPrimaryVertex.L1TrkVertexTag = cms.string("TrkVertex")
 process.pTkPrimaryVertex = cms.Path( process.L1TkPrimaryVertex)
 
 
+process.L1TkPrimaryVertexPurityCut.L1TrkVertexTag = cms.string("CutTrkVertex")
+process.pTkPrimaryVertexPurityCut = cms.Path( process.L1TkPrimaryVertexPurityCut)
 
 
+process.L1TkPrimaryVertexMVACut.L1TrkVertexTag = cms.string("MVATrkVertex")
+process.L1TkPrimaryVertexMVACut.MVAThreshold = 0.3
+process.pTkPrimaryVertexMVACut = cms.Path( process.L1TkPrimaryVertexMVACut)
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
-process.L1TrackerEtMiss.L1VertexInputTag = cms.InputTag("L1TkPrimaryVertex","L1TkVertex")
+process.L1TrackerEtMiss.L1VertexInputTag = cms.InputTag("L1TkPrimaryVertex","TrkVertex")
 process.L1TrackerEtMiss.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL) 
 process.L1TrackerEtMiss.L1TrkMETTag = cms.string("TrkMet")
 process.pL1TrackerEtMiss=cms.Path(process.L1TrackerEtMiss)
 
-process.L1TrackerEtMissPurityCut.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL) 
+
 process.L1TrackerEtMissPurityCut.L1TrkMETTag = cms.string("CutTrkMet")
+process.L1TrackerEtMissPurityCut.L1VertexInputTag = cms.InputTag("L1TkPrimaryVertexPurityCut","CutTrkVertex")
 process.pL1TrackerEtMissPurityCut =cms.Path(process.L1TrackerEtMissPurityCut)
 
-process.L1TrackerEtMissMVACut.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL) 
+
 process.L1TrackerEtMissMVACut.L1TrkMETTag = cms.string("MVATrkMet")
+process.L1TrackerEtMissMVACut.L1VertexInputTag = cms.InputTag("L1TkPrimaryVertexMVACut","MVATrkVertex")
 process.L1TrackerEtMissMVACut.MVAThreshold = 0.3
 process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
-process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
+#process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerJetProducer_cfi")
-process.L1TrackerJets.L1PrimaryVertexTag = cms.InputTag("L1TkPrimaryVertex","L1TkVertex")
+process.L1TrackerJets.L1PrimaryVertexTag = cms.InputTag("L1TkPrimaryVertex","TrkVertex")
 process.L1TrackerJets.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL) 
 process.L1TrackerJets.L1TrkJetTag = cms.string("L1TrackerJets")
 process.pL1TrackerJets=cms.Path(process.L1TrackerJets)
 
-process.L1TrackerJetsPurityCut.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL) 
+
 process.L1TrackerJetsPurityCut.L1TrkJetTag = cms.string("CutL1TrackerJets")
+process.L1TrackerJetsPurityCut.L1PrimaryVertexTag = cms.InputTag("L1TkPrimaryVertexPurityCut","CutTrkVertex")
 process.pL1TrackerJetsPurityCut =cms.Path(process.L1TrackerJetsPurityCut)
 
-process.L1TrackerJetsMVACut.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL) 
+
 process.L1TrackerJetsMVACut.L1TrkJetTag = cms.string("MVAL1TrackerJets")
+process.L1TrackerJetsMVACut.L1PrimaryVertexTag = cms.InputTag("L1TkPrimaryVertexMVACut","MVATrkVertex")
 process.L1TrackerJetsMVACut.MVAThreshold = 0.3
 process.pL1TrackerJetsMVACut =cms.Path(process.L1TrackerJetsMVACut)
 
@@ -158,7 +168,7 @@ process.out = cms.OutputModule( "PoolOutputModule",
                             	"keep *_L1TrackerJets*_*_*",
      	                        "keep *_L1TrackerEtMiss*_*_*",
                                 "keep *_L1TrackerGenEtMiss*_*_*",
-     	                        "keep *_L1TkVertex*_*",
+     	                        "keep *_L1TkPrimaryVertex*_*",
                                 "keep  *TTTrack*_*_*_*",
                                 "keep  *TTStub*_*_*_*"
      	                        )
