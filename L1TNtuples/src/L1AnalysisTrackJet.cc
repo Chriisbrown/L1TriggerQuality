@@ -67,7 +67,7 @@ void L1Analysis::L1AnalysisTrackJet::SetGenJet(const edm::Handle<reco::GenJetCol
   reco::GenJetCollection::const_iterator genJetEnd = genJets->end();
   for( ; genJetItr != genJetEnd ; ++genJetItr) {
     if(genJetItr->pt()>30 && abs(genJetItr->eta())<2.4)
-      l1extra_.GevJetHt += genJetItr->pt();
+      l1extra_.GenJetHt += genJetItr->pt();
     l1extra_.GenJetPt.push_back( genJetItr->pt() );
     l1extra_.GenJetEta.push_back( genJetItr->eta() );
     l1extra_.GenJetPhi.push_back( genJetItr->phi() );
