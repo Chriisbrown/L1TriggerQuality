@@ -89,18 +89,24 @@ class L1TkFastVertexProducer : public edm::EDProducer {
 	int nStubsmin ;		// minimum number of stubs 
 	int nStubsPSmin ;	// minimum number of stubs in PS modules 
 
-        int nBinning;   // number of bins used in the temp histogram
+  int nBinning;   // number of bins used in the temp histogram
 
-        bool MonteCarloVertex;   //
+  bool MonteCarloVertex;   //
         //const StackedTrackerGeometry*                   theStackedGeometry;
 
 	bool doPtComp ;
-        bool doTightChi2 ;
+  bool doTightChi2 ;
   
-        int WEIGHT; // weight (power) of pT 0 , 1, 2
+  int WEIGHT; // weight (power) of pT 0 , 1, 2
 
 	TH1F* htmp;
-        TH1F* htmp_weight;
+  TH1F* htmp_weight;
+
+  bool Purity_cut;
+  bool MVA_cut;
+  float Threshold;
+
+  std::string outputname;
 
   const edm::EDGetTokenT< edm::HepMCProduct > hepmcToken;
   const edm::EDGetTokenT< std::vector<reco::GenParticle > > genparticleToken;
@@ -170,9 +176,13 @@ L1TkFastVertexProducer::L1TkFastVertexProducer(const edm::ParameterSet& iConfig)
   htmp = new TH1F("htmp",";z (cm); Tracks",nbins,xmin,xmax);
   htmp_weight = new TH1F("htmp_weight",";z (cm); Tracks",nbins,xmin,xmax);
 
+  Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
+  Purity_cut = iConfig.getParameter<bool>("Cut");
+  MVA_cut = iConfig.getParameter<bool>("MVACut");
+  outputname = iConfig.getParameter<std::string>("L1TrkVertexTag");
 
 
-  produces<TkPrimaryVertexCollection>("L1TkVertex").setBranchAlias("L1TkVertex");;
+  produces<TkPrimaryVertexCollection>(outputname).setBranchAlias(outputname);;
 
 }
 
@@ -306,7 +316,6 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
 
     if (fabs(z) > ZMAX ) continue;
-    if (chi2 > CHI2MAX) continue;
     if (pt < PTMINTRA) continue;
 
     // saturation or truncation :
@@ -315,34 +324,36 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	if (HighPtTracks == 1)  pt = PTMAX;	// saturate
    }
   
+  if (Purity_cut) {
 
+    if (chi2 > CHI2MAX) continue;
         // get the number of stubs and the number of stubs in PS layers
-   float nPS = 0.;     // number of stubs in PS modules
-   float nstubs = 0;
+    float nPS = 0.;     // number of stubs in PS modules
+    float nstubs = 0;
    
    // get pointers to stubs associated to the L1 track
-   std::vector< edm::Ref< edmNew::DetSetVector< TTStub< Ref_Phase2TrackerDigi_ > >, TTStub< Ref_Phase2TrackerDigi_ > > >  theStubs = trackIter -> getStubRefs() ;
+    std::vector< edm::Ref< edmNew::DetSetVector< TTStub< Ref_Phase2TrackerDigi_ > >, TTStub< Ref_Phase2TrackerDigi_ > > >  theStubs = trackIter -> getStubRefs() ;
    
-   int tmp_trk_nstub = (int) theStubs.size();
-   if ( tmp_trk_nstub < 0) {
-     std::cout << " ... could not retrieve the vector of stubs in L1TkFastVertexProducer::SumPtVertex " << std::endl;
-     continue;
-   }
+    int tmp_trk_nstub = (int) theStubs.size();
+    if ( tmp_trk_nstub < 0) {
+      std::cout << " ... could not retrieve the vector of stubs in L1TkFastVertexProducer::SumPtVertex " << std::endl;
+      continue;
+    }
    
    
    // loop over the stubs
-   for (unsigned int istub=0; istub<(unsigned int)theStubs.size(); istub++) {
-     nstubs ++;
-     bool isPS = false;
-     DetId detId( theStubs.at(istub)->getDetId() );
-     if (detId.det() == DetId::Detector::Tracker) {
-       if (detId.subdetId() == StripSubdetector::TOB && tTopo->tobLayer(detId) <= 3)        isPS = true;
-       else if (detId.subdetId() == StripSubdetector::TID && tTopo->tidRing(detId) <= 9)  isPS = true;
-     }
-     if (isPS) nPS ++;
-   } // end loop over stubs
-   if (nstubs < nStubsmin) continue;
-   if (nPS < nStubsPSmin) continue;
+    for (unsigned int istub=0; istub<(unsigned int)theStubs.size(); istub++) {
+      nstubs ++;
+      bool isPS = false;
+      DetId detId( theStubs.at(istub)->getDetId() );
+      if (detId.det() == DetId::Detector::Tracker) {
+        if (detId.subdetId() == StripSubdetector::TOB && tTopo->tobLayer(detId) <= 3)        isPS = true;
+        else if (detId.subdetId() == StripSubdetector::TID && tTopo->tidRing(detId) <= 9)  isPS = true;
+      }
+      if (isPS) nPS ++;
+    } // end loop over stubs
+    if (nstubs < nStubsmin) continue;
+    if (nPS < nStubsPSmin) continue;
    
    
    
@@ -362,7 +373,17 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
    if (doTightChi2) {
      if (pt>10.0 && chi2dof>5.0) continue;
    }
-   
+
+    
+    
+  }
+
+  if (MVA_cut) {
+      float quality = trackIter->trkMVA1();
+      if (quality < Threshold) continue;
+    }
+
+
    htmp -> Fill( z );
    htmp_weight -> Fill( z, wt );// changed from "pt" to "wt" which is some power of pt (0,1 or 2)
    
@@ -451,7 +472,7 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     result -> push_back( vtx5 );
   */
   
-  iEvent.put( std::move(result),"L1TkVertex" );
+  iEvent.put( std::move(result),outputname );
 }
 
 

@@ -94,7 +94,11 @@ class TkPrimaryVertexProducer : public edm::EDProducer {
 	int nStubsPSmin ;	// minimum number of stubs in PS modules 
 	bool SumPtSquared;
 
-        const edm::EDGetTokenT< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
+  bool Purity_cut;
+  bool MVA_cut;
+  float Threshold;
+
+  const edm::EDGetTokenT< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
 
 };
 
@@ -125,6 +129,10 @@ TkPrimaryVertexProducer::TkPrimaryVertexProducer(const edm::ParameterSet& iConfi
   nStubsPSmin = iConfig.getParameter<int>("nStubsPSmin");
 
   SumPtSquared = iConfig.getParameter<bool>("SumPtSquared");
+
+  Threshold = (float)iConfig.getParameter<double>("MVAThreshold");
+  Purity_cut = iConfig.getParameter<bool>("Cut");
+  MVA_cut = iConfig.getParameter<bool>("MVACut");
 
   produces<TkPrimaryVertexCollection>();
 
@@ -248,21 +256,24 @@ float TkPrimaryVertexProducer::SumPtVertex(const edm::Handle<L1TTTrackCollection
 
     if (pt < ptmin) continue;
     if (fabs(ztr) > ZMAX ) continue;
-    if (chi2 > CHI2MAX) continue;
+    
     if ( fabs(ztr - z) > DeltaZ) continue;   // eg DeltaZ = 1 mm
 
+    if (Purity_cut){
+      if (chi2 > CHI2MAX) continue;
 
+    
 	// get the number of stubs and the number of stubs in PS layers
-    float nPS = 0.;     // number of stubs in PS modules
-    float nstubs = 0;
+      float nPS = 0.;     // number of stubs in PS modules
+      float nstubs = 0;
 
       // get pointers to stubs associated to the L1 track
       std::vector< edm::Ref< edmNew::DetSetVector< TTStub< Ref_Phase2TrackerDigi_ > >, TTStub< Ref_Phase2TrackerDigi_ > > >  theStubs = trackIter -> getStubRefs() ;
 
       int tmp_trk_nstub = (int) theStubs.size();
       if ( tmp_trk_nstub < 0) {
-	std::cout << " ... could not retrieve the vector of stubs in TkPrimaryVertexProducer::SumPtVertex " << std::endl;
-	continue;
+      std::cout << " ... could not retrieve the vector of stubs in TkPrimaryVertexProducer::SumPtVertex " << std::endl;
+      continue;
       }
 
       // loop over the stubs
@@ -270,13 +281,13 @@ float TkPrimaryVertexProducer::SumPtVertex(const edm::Handle<L1TTTrackCollection
         //bool genuine = theStubs.at(istub)->isGenuine();
         //if (genuine) {
            nstubs ++;
-	   bool isPS = false;
-	   DetId detId( theStubs.at(istub)->getDetId() );
-	   if (detId.det() == DetId::Detector::Tracker) {
+	    bool isPS = false;
+	    DetId detId( theStubs.at(istub)->getDetId() );
+	    if (detId.det() == DetId::Detector::Tracker) {
 	     if (detId.subdetId() == StripSubdetector::TOB && topol->tobLayer(detId) <= 3)  isPS = true;
 	     else if (detId.subdetId() == StripSubdetector::TID && topol->tidRing(detId) <= 9)  isPS = true;
-	   }
-	   if (isPS) nPS ++;
+	    }
+	    if (isPS) nPS ++;
 	   //if (isPS) cout << " this is a stub in a PS module " << endl;
            if (isPS) nPS ++;
 	//} // endif genuine
@@ -285,10 +296,17 @@ float TkPrimaryVertexProducer::SumPtVertex(const edm::Handle<L1TTTrackCollection
         if (imode == 1 || imode == 2 ) {
             if (nPS < nPSmin) continue;
         }
-	if ( nstubs < nmin) continue;
+	    if ( nstubs < nmin) continue;
+      }
+  
+  if (MVA_cut) {
+      float quality = trackIter->trkMVA1();
+      if (quality < Threshold) continue;
+    }
+  
 
-        if (imode == 2) sumpt += pt*pt;
-        if (imode == 1) sumpt += pt;
+  if (imode == 2) sumpt += pt*pt;
+  if (imode == 1) sumpt += pt;
 
   } // end loop over the tracks
 

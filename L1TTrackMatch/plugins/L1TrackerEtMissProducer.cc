@@ -17,7 +17,8 @@
 #include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
 #include "DataFormats/L1TCorrelator/interface/TkEtMiss.h"
 #include "DataFormats/L1TCorrelator/interface/TkEtMissFwd.h"
-#include "DataFormats/L1TVertex/interface/Vertex.h"
+#include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
+
 
 // detector geometry
 #include "MagneticField/Engine/interface/MagneticField.h"
@@ -59,7 +60,7 @@ private:
 
   std::string outputname;
 
-  const edm::EDGetTokenT< VertexCollection > pvToken;
+  const edm::EDGetTokenT< TkPrimaryVertexCollection > pvToken;
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
 };
 
@@ -67,7 +68,7 @@ private:
 //constructor//
 ///////////////
 L1TrackerEtMissProducer::L1TrackerEtMissProducer(const edm::ParameterSet& iConfig) :
-pvToken(consumes<VertexCollection>(iConfig.getParameter<edm::InputTag>("L1VertexInputTag"))),
+pvToken(consumes<TkPrimaryVertexCollection>(iConfig.getParameter<edm::InputTag>("L1VertexInputTag"))),
 trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.getParameter<edm::InputTag>("L1TrackInputTag")))
 {
   maxZ0 = (float)iConfig.getParameter<double>("maxZ0");
@@ -106,7 +107,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
 
   std::unique_ptr<TkEtMissCollection> METCollection(new TkEtMissCollection);
 
-  edm::Handle<VertexCollection> L1VertexHandle;
+  edm::Handle<TkPrimaryVertexCollection> L1VertexHandle;
   iEvent.getByToken(pvToken,L1VertexHandle);
 
   edm::Handle<L1TTTrackCollectionType> L1TTTrackHandle;
@@ -131,7 +132,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   double sumPy_PU = 0;
   double etTot_PU = 0;
 
-  float zVTX = L1VertexHandle->begin()->z0();
+  float zVTX = L1VertexHandle->begin()->zvertex();
 
   for (trackIter = L1TTTrackHandle->begin(); trackIter != L1TTTrackHandle->end(); ++trackIter) {
     

@@ -23,10 +23,13 @@ L1TkPrimaryVertex = cms.EDProducer('L1TkFastVertexProducer',
      MonteCarloVertex = cms.bool( False ),    #  when True: dont run the vxt finding algo but pick up the MC generated vtx
      doPtComp = cms.bool( True ),       # track-stubs PT compatibility cut
      doTightChi2 = cms.bool( False ),    # chi2dof < 5 for tracks with PT > 10
-     WEIGHT = cms.int32(1)            # WEIGHT can be set to 0, 1 or 2 for unweighted, pT weighted
+     WEIGHT = cms.int32(1),            # WEIGHT can be set to 0, 1 or 2 for unweighted, pT weighted
                                       # or pT2 weighted tracks respectively.
-
-#
+     Cut = cms.bool(False),
+     MVACut = cms.bool(False),
+     MVAThreshold = cms.double(0.5),
+     L1TrkVertexTag = cms.string("Trk")
+     
 # Other working point which works better for H -> TauTau,
 # cf talk by Moshan Ather, Dec 12, 2014:
 
@@ -38,4 +41,13 @@ L1TkPrimaryVertex = cms.EDProducer('L1TkFastVertexProducer',
 #     CHI2MAX = cms.double( 20 )
 #
 
+)
+
+L1TkPrimaryVertexPurityCut = L1TkPrimaryVertex.clone(
+     Cut = cms.bool(True)
+)
+
+L1TkPrimaryVertexMVACut = L1TkPrimaryVertex.clone(
+     MVACut = cms.bool(True),
+     MVAThreshold = cms.double(0.5)
 )

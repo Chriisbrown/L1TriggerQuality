@@ -27,7 +27,7 @@
 
 #include "DataFormats/L1TCorrelator/interface/TkJet.h"
 #include "DataFormats/L1TCorrelator/interface/TkJetFwd.h"
-#include "DataFormats/L1TVertex/interface/Vertex.h"
+#include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 
 // L1 tracks
@@ -100,14 +100,14 @@ private:
 
   //need PVtx here
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
-  edm::EDGetTokenT<VertexCollection>PVertexToken;
+  edm::EDGetTokenT<TkPrimaryVertexCollection>PVertexToken;
 };
 
 //////////////
 // constructor
 L1TrackerJetProducer::L1TrackerJetProducer(const edm::ParameterSet& iConfig) :
 trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.getParameter<edm::InputTag>("L1TrackInputTag"))),
-PVertexToken(consumes<VertexCollection>(iConfig.getParameter<edm::InputTag>("L1PrimaryVertexTag")))
+PVertexToken(consumes<TkPrimaryVertexCollection>(iConfig.getParameter<edm::InputTag>("L1PrimaryVertexTag")))
 {
 
   
@@ -169,7 +169,7 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
   double mMagneticFieldStrength = theMagneticField->inTesla(GlobalPoint(0,0,0)).z();
   const TrackerGeometry* const theTrackerGeom = tGeomHandle.product();
   
-  edm::Handle<VertexCollection >TkPrimaryVertexHandle;
+  edm::Handle<TkPrimaryVertexCollection >TkPrimaryVertexHandle;
   iEvent.getByToken(PVertexToken, TkPrimaryVertexHandle);
   fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, CONESize);
   std::vector<fastjet::PseudoJet>  JetInputs;
@@ -209,7 +209,7 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
 
 
     
-    double DeltaZtoVtx=fabs(TkPrimaryVertexHandle->begin()->z0()-iterL1Track->POCA().z());
+    double DeltaZtoVtx=fabs(TkPrimaryVertexHandle->begin()->zvertex()-iterL1Track->POCA().z());
     if(DeltaZtoVtx>DeltaZ0Cut)continue;
 
     fastjet::PseudoJet psuedoJet(iterL1Track->momentum().x(), iterL1Track->momentum().y(), iterL1Track->momentum().z(), iterL1Track->momentum().mag());

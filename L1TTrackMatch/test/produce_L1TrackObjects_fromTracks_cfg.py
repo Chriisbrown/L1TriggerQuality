@@ -80,7 +80,11 @@ L1TRKClass_LABEL = "Level1ClassTTTracks"
 #process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 process.load("L1Trigger.L1TTrackMatch.L1TkPrimaryVertexProducer_cfi")
-process.pTkPrimaryVertex = cms.Path( process.L1TkPrimaryVertex )
+process.L1TkPrimaryVertex.L1TrackInputTag(L1TRKClass_NAME, L1TRKClass_LABEL)
+process.pTkPrimaryVertex = cms.Path( process.L1TkPrimaryVertex)
+
+
+
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
