@@ -72,7 +72,7 @@ process.TTTracksEmulation = cms.Path(process.L1TrackletEmulationTracks)
 process.TTTracksEmulationWithTruth = cms.Path(process.L1TrackletEmulationTracksWithAssociators*process.TrackClassifier)
 
 L1TRKClass_NAME  = "TrackClassifier"
-L1TRKClass_LABEL = "Level1ClassTTTracks"
+L1TRKClass_LABEL = "Level1TTTracks"
 
 
 #process.load("L1Trigger.VertexFinder.VertexProducer_cff")

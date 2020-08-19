@@ -319,12 +319,12 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     if (pt < PTMINTRA) continue;
 
     // saturation or truncation :
-   if ( PTMAX > 0 && pt > PTMAX ) {
-	if (HighPtTracks == 0)  continue;	// ignore this track
-	if (HighPtTracks == 1)  pt = PTMAX;	// saturate
-   }
+    if ( PTMAX > 0 && pt > PTMAX ) {
+	  if (HighPtTracks == 0)  continue;	// ignore this track
+	  if (HighPtTracks == 1)  pt = PTMAX;	// saturate
+    }
   
-  if (Purity_cut) {
+    if (Purity_cut) {
 
     if (chi2 > CHI2MAX) continue;
         // get the number of stubs and the number of stubs in PS layers
@@ -378,10 +378,11 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     
   }
 
-  if (MVA_cut) {
+    if (MVA_cut) {
       float quality = trackIter->trkMVA1();
+      std::cout << quality << endl;
       if (quality < Threshold) continue;
-    }
+      }
 
 
    htmp -> Fill( z );

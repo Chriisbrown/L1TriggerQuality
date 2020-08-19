@@ -31,6 +31,12 @@ void L1Analysis::L1AnalysisTrackMET::SetTrackMET(const edm::Handle<l1t::TkEtMiss
       l1extra_.MVATrkSumEt = (TkEtMiss->at(0).etTotal());
       l1extra_.MVATrkMetPhi =(TkEtMiss->at(0).phi());
     }
+    if (name == "Sim")
+    {
+      l1extra_.SimTrkMet =   (TkEtMiss->at(0).etMiss());
+      l1extra_.SimTrkSumEt = (TkEtMiss->at(0).etTotal());
+      l1extra_.SimTrkMetPhi =(TkEtMiss->at(0).phi());
+    }
 
 }
 
