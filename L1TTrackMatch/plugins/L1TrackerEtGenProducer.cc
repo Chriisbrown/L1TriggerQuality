@@ -65,6 +65,7 @@ private:
 L1TrackerEtGenProducer::L1TrackerEtGenProducer(const edm::ParameterSet& iConfig) :
 TrackingParticleToken_(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("L1TrackingTrackInputTag"))),
 TrackingVertexToken_(consumes< std::vector< TrackingVertex > >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag")))
+//TrackingVertexToken_(consumes< TkPrimaryVertexCollection  >(iConfig.getParameter<edm::InputTag>("L1TrackingVertexInputTag")))
 {
   DeltaZ = (float)iConfig.getParameter<double>("DeltaZ");
   outputname = iConfig.getParameter<std::string>("L1TrkMETTag");
@@ -96,11 +97,11 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   std::unique_ptr<TkEtMissCollection> METCollection(new TkEtMissCollection);
 
   edm::Handle< std::vector< TrackingParticle > > TrackingParticleHandle;
-  //edm::Handle< std::vector< TrackingVertex > > TrackingVertexHandle;
+  edm::Handle< std::vector< TrackingVertex > > TrackingVertexHandle;
   iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
-  //iEvent.getByToken(TrackingVertexToken_, TrackingVertexHandle);
-  edm::Handle<TkPrimaryVertexCollection> TrackingVertexHandle;
-  iEvent.getByToken(TrackingVertexToken_,TrackingVertexHandle);
+  iEvent.getByToken(TrackingVertexToken_, TrackingVertexHandle);
+  //edm::Handle<TkPrimaryVertexCollection> TrackingVertexHandle;
+  //iEvent.getByToken(TrackingVertexToken_,TrackingVertexHandle);
 
 
   L1TTTrackCollectionType::const_iterator trackIter;
@@ -123,8 +124,8 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   double sumPy_PU = 0;
   double etTot_PU = 0;
 
-  //float zVTX = TrackingVertexHandle->begin()->position().Z();
-  float zVTX = TrackingVertexHandle->begin()->zvertex();
+  float zVTX = TrackingVertexHandle->begin()->position().Z();
+  //float zVTX = TrackingVertexHandle->begin()->zvertex();
 
 
   for (trackIter = TrackingParticleHandle->begin(); trackIter != TrackingParticleHandle->end(); ++trackIter) {

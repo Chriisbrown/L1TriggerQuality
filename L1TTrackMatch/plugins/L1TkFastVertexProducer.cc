@@ -32,7 +32,7 @@
 
 #include "Geometry/Records/interface/TrackerTopologyRcd.h"
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
-
+#include "SimDataFormats/TrackingAnalysis/interface/TrackingParticle.h"
 //#include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
 #include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
 
@@ -109,7 +109,8 @@ class L1TkFastVertexProducer : public edm::EDProducer {
   std::string outputname;
 
   const edm::EDGetTokenT< edm::HepMCProduct > hepmcToken;
-  const edm::EDGetTokenT< std::vector<reco::GenParticle > > genparticleToken;
+  //const edm::EDGetTokenT< std::vector<reco::GenParticle > > genparticleToken;
+  const edm::EDGetTokenT< std::vector< TrackingParticle > > genparticleToken;
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
 
 };
@@ -128,7 +129,8 @@ class L1TkFastVertexProducer : public edm::EDProducer {
 //
 L1TkFastVertexProducer::L1TkFastVertexProducer(const edm::ParameterSet& iConfig) :
   hepmcToken(consumes< edm::HepMCProduct > (iConfig.getParameter<edm::InputTag>("HepMCInputTag"))),
-  genparticleToken(consumes< std::vector< reco::GenParticle > > (iConfig.getParameter<edm::InputTag>("GenParticleInputTag"))),
+  //genparticleToken(consumes< std::vector< reco::GenParticle > > (iConfig.getParameter<edm::InputTag>("GenParticleInputTag"))),
+  genparticleToken(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("GenParticleInputTag")))
   trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.getParameter<edm::InputTag>("L1TrackInputTag")))
 {
    //register your products
@@ -226,8 +228,12 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     edm::Handle<edm::HepMCProduct> HepMCEvt;
     iEvent.getByToken(hepmcToken, HepMCEvt);
     
-    edm::Handle< std::vector<reco::GenParticle > > GenParticleHandle;
+    //edm::Handle< std::vector<reco::GenParticle > > GenParticleHandle;
+    //iEvent.getByToken(genparticleToken, GenParticleHandle);
+
+    edm::Handle< std::vector< TrackingParticle > > GenParticleHandle;
     iEvent.getByToken(genparticleToken, GenParticleHandle);
+    
     
     const double mm=0.1;
     float zvtx_gen = -999;
@@ -263,7 +269,8 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       
     }
     else if (GenParticleHandle.isValid() ) {
-      std::vector<reco::GenParticle>::const_iterator genpartIter ;
+      //std::vector<reco::GenParticle>::const_iterator genpartIter ;
+      std::vector<TrackingParticle > ::const_iterator genpartIter ;
         for (genpartIter = GenParticleHandle->begin(); genpartIter != GenParticleHandle->end(); ++genpartIter) {
 	  int status = genpartIter -> status() ;
 	  if (status != 3) continue;
@@ -285,7 +292,7 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     TkPrimaryVertex genvtx( zvtx_gen, -999.); 
     
     result -> push_back( genvtx );
-    iEvent.put( std::move(result) );
+    iEvent.put( std::move(result) ,outputname);
     return;
  }
 
@@ -380,7 +387,6 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if (MVA_cut) {
       float quality = trackIter->trkMVA1();
-      std::cout << quality << std::endl;
       if (quality < Threshold) continue;
       }
 

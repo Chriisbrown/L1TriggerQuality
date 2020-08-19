@@ -96,8 +96,8 @@ process.L1TkPrimaryVertexMVACut.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, 
 process.L1TkPrimaryVertexMVACut.MVAThreshold = 0.3
 process.pTkPrimaryVertexMVACut = cms.Path( process.L1TkPrimaryVertexMVACut)
 
-process.L1TkPrimaryVertexMC.L1TrkVertexTag = cms.string("MCTrkVertex")
-process.pTkPrimaryVertexMC = cms.Path( process.L1TkPrimaryVertexMC)
+#process.L1TkPrimaryVertexMC.L1TrkVertexTag = cms.string("MCTrkVertex")
+#process.pTkPrimaryVertexMC = cms.Path( process.L1TkPrimaryVertexMC)
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerEtMissProducer_cfi")
 process.L1TrackerEtMiss.L1VertexInputTag = cms.InputTag("L1TkPrimaryVertex","TrkVertex")
@@ -118,7 +118,7 @@ process.L1TrackerEtMissMVACut.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1
 process.L1TrackerEtMissMVACut.MVAThreshold = 0.3
 process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
-process.L1TrackerGenEtMiss.L1TrackingVertexInputTag("L1TkPrimaryVertexMC","MCTrkVertex")
+#process.L1TrackerGenEtMiss.L1TrackingVertexInputTag= cms.InputTag("L1TkPrimaryVertexMC","MCTrkVertex")
 process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 
 
@@ -187,9 +187,12 @@ process.out = cms.OutputModule( "PoolOutputModule",
 process.FEVToutput_step = cms.EndPath(process.out)
 process.schedule = cms.Schedule(
                                 process.TTTracksEmulationWithTruth,
+
                                 process.pTkPrimaryVertex,
                                 process.pTkPrimaryVertexPurityCut,
                                 process.pTkPrimaryVertexMVACut,
+                                #process.pTkPrimaryVertexMC,
+
                                 process.pL1TrackerEtMiss,
                                 process.pL1TrackerEtMissPurityCut,
                                 process.pL1TrackerEtMissMVACut,
