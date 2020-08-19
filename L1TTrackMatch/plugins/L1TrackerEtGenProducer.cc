@@ -56,7 +56,7 @@ private:
 
   const edm::EDGetTokenT< std::vector< TrackingParticle > > TrackingParticleToken_;
   //const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
-  const edm::EDGetTokenT< TkPrimaryVertexCollection > pvToken;
+  const edm::EDGetTokenT< TkPrimaryVertexCollection > TrackingVertexToken_;
 };
 
 ///////////////
@@ -99,8 +99,8 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   //edm::Handle< std::vector< TrackingVertex > > TrackingVertexHandle;
   iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
   //iEvent.getByToken(TrackingVertexToken_, TrackingVertexHandle);
-  edm::Handle<TkPrimaryVertexCollection> L1VertexHandle;
-  iEvent.getByToken(pvToken,L1VertexHandle);
+  edm::Handle<TkPrimaryVertexCollection> TrackingVertexHandle;
+  iEvent.getByToken(TrackingVertexToken_,TrackingVertexHandle);
 
 
   L1TTTrackCollectionType::const_iterator trackIter;
@@ -124,7 +124,7 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   double etTot_PU = 0;
 
   //float zVTX = TrackingVertexHandle->begin()->position().Z();
-  float zVTX = L1VertexHandle->begin()->zvertex();
+  float zVTX = TrackingVertexHandle->begin()->zvertex();
 
 
   for (trackIter = TrackingParticleHandle->begin(); trackIter != TrackingParticleHandle->end(); ++trackIter) {

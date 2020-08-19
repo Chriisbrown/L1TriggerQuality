@@ -380,7 +380,7 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if (MVA_cut) {
       float quality = trackIter->trkMVA1();
-      std::cout << quality << endl;
+      std::cout << quality << std::endl;
       if (quality < Threshold) continue;
       }
 
