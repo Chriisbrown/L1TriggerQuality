@@ -33,7 +33,8 @@ options.parseArguments()
 
 #--- input and output
 #inputFiles = []
-inputFiles = ['/store/relval/CMSSW_11_1_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU25ns_110X_mcRun4_realistic_v3_2026D49PU200-v1/10000/55A5DB80-84E7-2746-819E-2ECAFB126BD2.root']    
+inputFiles = ['/store/relval/CMSSW_11_0_0_pre7/RelValH125GGgluonfusion_14/GEN-SIM-RECO/PU25ns_110X_mcRun4_realistic_v1_2026D41PU200-v1/10000/9CC05E51-4E81-CD4F-968E-912A1BE96152.root']
+#inputFiles = ['/store/relval/CMSSW_11_1_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU25ns_110X_mcRun4_realistic_v3_2026D49PU200-v1/10000/55A5DB80-84E7-2746-819E-2ECAFB126BD2.root']    
 for filePath in options.inputFiles:
     if filePath.endswith(".root"):
         inputFiles.append(filePath)
