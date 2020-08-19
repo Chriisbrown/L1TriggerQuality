@@ -109,8 +109,7 @@ class L1TkFastVertexProducer : public edm::EDProducer {
   std::string outputname;
 
   const edm::EDGetTokenT< edm::HepMCProduct > hepmcToken;
-  //const edm::EDGetTokenT< std::vector<reco::GenParticle > > genparticleToken;
-  const edm::EDGetTokenT< std::vector< TrackingParticle > > genparticleToken;
+  const edm::EDGetTokenT< std::vector<reco::GenParticle > > genparticleToken;
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken;
 
 };
@@ -129,8 +128,7 @@ class L1TkFastVertexProducer : public edm::EDProducer {
 //
 L1TkFastVertexProducer::L1TkFastVertexProducer(const edm::ParameterSet& iConfig) :
   hepmcToken(consumes< edm::HepMCProduct > (iConfig.getParameter<edm::InputTag>("HepMCInputTag"))),
-  //genparticleToken(consumes< std::vector< reco::GenParticle > > (iConfig.getParameter<edm::InputTag>("GenParticleInputTag"))),
-  genparticleToken(consumes< std::vector< TrackingParticle > > (iConfig.getParameter<edm::InputTag>("GenParticleInputTag")))
+  genparticleToken(consumes< std::vector< reco::GenParticle > > (iConfig.getParameter<edm::InputTag>("GenParticleInputTag"))),
   trackToken(consumes< std::vector<TTTrack< Ref_Phase2TrackerDigi_> > > (iConfig.getParameter<edm::InputTag>("L1TrackInputTag")))
 {
    //register your products
@@ -228,11 +226,10 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     edm::Handle<edm::HepMCProduct> HepMCEvt;
     iEvent.getByToken(hepmcToken, HepMCEvt);
     
-    //edm::Handle< std::vector<reco::GenParticle > > GenParticleHandle;
-    //iEvent.getByToken(genparticleToken, GenParticleHandle);
-
-    edm::Handle< std::vector< TrackingParticle > > GenParticleHandle;
+    edm::Handle< std::vector<reco::GenParticle > > GenParticleHandle;
     iEvent.getByToken(genparticleToken, GenParticleHandle);
+
+
     
     
     const double mm=0.1;
@@ -269,8 +266,7 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       
     }
     else if (GenParticleHandle.isValid() ) {
-      //std::vector<reco::GenParticle>::const_iterator genpartIter ;
-      std::vector<TrackingParticle > ::const_iterator genpartIter ;
+      std::vector<reco::GenParticle>::const_iterator genpartIter ;
         for (genpartIter = GenParticleHandle->begin(); genpartIter != GenParticleHandle->end(); ++genpartIter) {
 	  int status = genpartIter -> status() ;
 	  if (status != 3) continue;
