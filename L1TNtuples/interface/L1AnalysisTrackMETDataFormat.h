@@ -32,6 +32,9 @@ namespace L1Analysis
       MVATrkMet = 0;
       MVATrkMetPhi = 0;
       MVATrkSumEt = 0;
+      SimTrkMet = 0;
+      SimTrkMetPhi = 0;
+      SimTrkSumEt = 0;
     }
 
     double GenMet;
@@ -47,6 +50,9 @@ namespace L1Analysis
     double MVATrkMet;
     double MVATrkMetPhi;
     double MVATrkSumEt;
+    double SimTrkMet;
+    double SimTrkMetPhi;
+    double SimTrkSumEt;
 
   }; 
 }

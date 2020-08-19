@@ -158,7 +158,6 @@ void L1TrackClassifier::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   
   // Prepare output TTTracks
   std::unique_ptr< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > L1TkTracksForOutput( new std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > );
-  cout << algorithm << endl;
   //Iterate through tracks
   for (trackIter = L1TTTrackHandle->begin(); trackIter != L1TTTrackHandle->end(); ++trackIter) {
 

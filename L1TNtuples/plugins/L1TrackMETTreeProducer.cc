@@ -73,6 +73,7 @@ private:
   edm::EDGetTokenT<l1t::TkEtMissCollection> TkMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> CutTkMET_;
   edm::EDGetTokenT<l1t::TkEtMissCollection> MVATkMET_;
+  edm::EDGetTokenT<l1t::TkEtMissCollection> SimTkMET_;
 
 
 };
@@ -83,6 +84,7 @@ L1TrackMETTreeProducer::L1TrackMETTreeProducer(const edm::ParameterSet& iConfig)
   TkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("TkMETToken"));
   CutTkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("CutTkMETToken"));
   MVATkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("MVATkMETToken"));
+  SimTkMET_  = consumes<l1t::TkEtMissCollection>(iConfig.getParameter<edm::InputTag>("SimTkMETToken"));
 
   l1Extra     = new L1Analysis::L1AnalysisTrackMET();
   l1ExtraData = l1Extra->getData();
@@ -154,6 +156,16 @@ L1TrackMETTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup&
   } else {
     edm::LogWarning("MissingProduct") << "L1 Track MVA MET not found. Branch will not be filled" << std::endl;
   }
+
+  edm::Handle<l1t::TkEtMissCollection> SimTkMET;
+  iEvent.getByToken(SimTkMET_,SimTkMET);
+
+  if (SimTkMET.isValid()){
+    l1Extra->SetTrackMET(SimTkMET,"Sim");
+  } else {
+    edm::LogWarning("MissingProduct") << "L1 Track Sim MET not found. Branch will not be filled" << std::endl;
+  }
+
 
 
   tree_->Fill();

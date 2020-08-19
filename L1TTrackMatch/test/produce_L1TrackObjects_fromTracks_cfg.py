@@ -80,7 +80,7 @@ L1TRKClass_LABEL = "Level1ClassTTTracks"
 #process.pTkPrimaryVertex = cms.Path( process.VertexProducer )
 
 process.load("L1Trigger.L1TTrackMatch.L1TkPrimaryVertexProducer_cfi")
-process.L1TkPrimaryVertex.L1TrackInputTag(L1TRKClass_NAME, L1TRKClass_LABEL)
+process.L1TkPrimaryVertex.L1TrackInputTag = cms.InputTag(L1TRKClass_NAME, L1TRKClass_LABEL)
 process.L1TkPrimaryVertex.L1TrkVertexTag = cms.string("TrkVertex")
 process.pTkPrimaryVertex = cms.Path( process.L1TkPrimaryVertex)
 
@@ -110,7 +110,7 @@ process.L1TrackerEtMissMVACut.L1VertexInputTag = cms.InputTag("L1TkPrimaryVertex
 process.L1TrackerEtMissMVACut.MVAThreshold = 0.3
 process.pL1TrackerEtMissMVACut =cms.Path(process.L1TrackerEtMissMVACut)
 
-#process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
+process.pL1TrackerGenEt =cms.Path(process.L1TrackerGenEtMiss)
 
 
 process.load("L1Trigger.L1TTrackMatch.L1TrackerJetProducer_cfi")
@@ -168,7 +168,7 @@ process.out = cms.OutputModule( "PoolOutputModule",
                             	"keep *_L1TrackerJets*_*_*",
      	                        "keep *_L1TrackerEtMiss*_*_*",
                                 "keep *_L1TrackerGenEtMiss*_*_*",
-     	                        "keep *_L1TkPrimaryVertex*_*",
+     	                        "keep *_L1TkPrimaryVertex*_*_*",
                                 "keep  *TTTrack*_*_*_*",
                                 "keep  *TTStub*_*_*_*"
      	                        )
@@ -177,6 +177,8 @@ process.FEVToutput_step = cms.EndPath(process.out)
 process.schedule = cms.Schedule(
                                 process.TTTracksEmulationWithTruth,
                                 process.pTkPrimaryVertex,
+                                process.pTkPrimaryVertexPurityCut,
+                                process.pTkPrimaryVertexMVACut,
                                 process.pL1TrackerEtMiss,
                                 process.pL1TrackerEtMissPurityCut,
                                 process.pL1TrackerEtMissMVACut,
