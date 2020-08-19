@@ -51,3 +51,8 @@ L1TkPrimaryVertexMVACut = L1TkPrimaryVertex.clone(
      MVACut = cms.bool(True),
      MVAThreshold = cms.double(0.5)
 )
+
+L1TkPrimaryVertexMC = L1TkPrimaryVertex.clone(
+     MonteCarloVertex = cms.bool(True)
+)
+     

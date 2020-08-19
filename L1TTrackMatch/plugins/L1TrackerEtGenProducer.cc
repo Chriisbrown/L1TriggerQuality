@@ -20,6 +20,7 @@
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingParticle.h"
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingVertex.h"
 #include "DataFormats/L1TVertex/interface/Vertex.h"
+#include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
 
 // detector geometry
 #include "MagneticField/Engine/interface/MagneticField.h"
@@ -54,7 +55,8 @@ private:
   std::string outputname;
 
   const edm::EDGetTokenT< std::vector< TrackingParticle > > TrackingParticleToken_;
-  const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
+  //const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
+  const edm::EDGetTokenT< TkPrimaryVertexCollection > pvToken;
 };
 
 ///////////////
@@ -94,9 +96,11 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   std::unique_ptr<TkEtMissCollection> METCollection(new TkEtMissCollection);
 
   edm::Handle< std::vector< TrackingParticle > > TrackingParticleHandle;
-  edm::Handle< std::vector< TrackingVertex > > TrackingVertexHandle;
+  //edm::Handle< std::vector< TrackingVertex > > TrackingVertexHandle;
   iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
-  iEvent.getByToken(TrackingVertexToken_, TrackingVertexHandle);
+  //iEvent.getByToken(TrackingVertexToken_, TrackingVertexHandle);
+  edm::Handle<TkPrimaryVertexCollection> L1VertexHandle;
+  iEvent.getByToken(pvToken,L1VertexHandle);
 
 
   L1TTTrackCollectionType::const_iterator trackIter;
@@ -119,7 +123,9 @@ void L1TrackerEtGenProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   double sumPy_PU = 0;
   double etTot_PU = 0;
 
-  float zVTX = TrackingVertexHandle->begin()->position().Z();
+  //float zVTX = TrackingVertexHandle->begin()->position().Z();
+  float zVTX = L1VertexHandle->begin()->zvertex();
+
 
   for (trackIter = TrackingParticleHandle->begin(); trackIter != TrackingParticleHandle->end(); ++trackIter) {
     
