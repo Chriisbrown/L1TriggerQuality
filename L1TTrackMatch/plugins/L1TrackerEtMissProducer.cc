@@ -156,19 +156,19 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
       if (chi2dof > chi2dofMax) continue;
       if (bendchi2 > bendchi2Max) continue;
 
-      int nPS = 0.;     // number of stubs in PS modules
+      //int nPS = 0.;     // number of stubs in PS modules
       // loop over the stubs
-      for (unsigned int istub=0; istub<(unsigned int)theStubs.size(); istub++) {
-        DetId detId( theStubs.at(istub)->getDetId() );
-        if (detId.det() == DetId::Detector::Tracker) {
-          if ( (detId.subdetId() == StripSubdetector::TOB && tTopo->tobLayer(detId) <= 3) || (detId.subdetId() == StripSubdetector::TID && tTopo->tidRing(detId) <= 9) ) nPS++;
-        }
-      }
+      //for (unsigned int istub=0; istub<(unsigned int)theStubs.size(); istub++) {
+      //  DetId detId( theStubs.at(istub)->getDetId() );
+      //  if (detId.det() == DetId::Detector::Tracker) {
+      //    if ( (detId.subdetId() == StripSubdetector::TOB && tTopo->tobLayer(detId) <= 3) || (detId.subdetId() == StripSubdetector::TID && tTopo->tidRing(detId) <= 9) ) nPS++;
+      //  }
+      //}
 
       
 
-      if (nstubs < nStubsmin) continue;
-      if (nPS < nStubsPSmin) continue;
+      //if (nstubs < nStubsmin) continue;
+      //if (nPS < nStubsPSmin) continue;
 
     }
 

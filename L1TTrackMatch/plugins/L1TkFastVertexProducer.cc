@@ -330,6 +330,7 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     if (Purity_cut) {
 
     if (chi2 > CHI2MAX) continue;
+    '''
         // get the number of stubs and the number of stubs in PS layers
     float nPS = 0.;     // number of stubs in PS modules
     float nstubs = 0;
@@ -357,11 +358,13 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     } // end loop over stubs
     if (nstubs < nStubsmin) continue;
     if (nPS < nStubsPSmin) continue;
+    
    
    
    
    // quality cuts from Louise S, based on the pt-stub compatibility (June 20, 2014)
    int trk_nstub  = (int) trackIter ->getStubRefs().size();
+   
    float chi2dof = chi2 / (2*trk_nstub-4);
    
    if (doPtComp) {
@@ -376,6 +379,7 @@ L1TkFastVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
    if (doTightChi2) {
      if (pt>10.0 && chi2dof>5.0) continue;
    }
+   '''
 
     
     

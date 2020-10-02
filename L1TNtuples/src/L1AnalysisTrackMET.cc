@@ -45,6 +45,6 @@ void L1Analysis::L1AnalysisTrackMET::SetGenMET(const edm::Handle<reco::GenMETCol
 {
   l1extra_.GenSumEt  = genMetsTrue->at(0).sumEt();
   l1extra_.GenMetPhi = genMetsTrue->at(0).phi();
-  l1extra_.GenMet    = genMetsTrue->at(0).pt();
+  l1extra_.GenMet    = genMetsTrue->at(0).et();
 }
 

@@ -12,8 +12,9 @@ from onnxmltools.convert.common.data_types import FloatTensorType
 
 num_features = 21
 X = np.array(np.random.rand(10, num_features), dtype=np.float32)
-model = joblib.load("GBDTClassv1.pkl")
-#print(model.predict(X))
+model = joblib.load("xgbGBDT.pkl")
+D = xgb.DMatrix(X, label=None)
+print(model.predict(D))
 
 # The name of the input is needed in Clasifier_cff as GBDTIdONNXInputName
 initial_type = [('feature_input', FloatTensorType([1, num_features]))]
@@ -22,14 +23,14 @@ initial_type = [('feature_input', FloatTensorType([1, num_features]))]
 onx = onnxmltools.convert.convert_xgboost(model, initial_types=initial_type)
 
 # Save the model
-with open("GBDT_model.onnx", "wb") as f:
+with open("GBDT_xgb_model.onnx", "wb") as f:
     f.write(onx.SerializeToString())
 
 # This tests the model
 import onnxruntime as rt
 
 # setup runtime - load the persisted ONNX model
-sess = rt.InferenceSession("GBDT_model.onnx")
+sess = rt.InferenceSession("GBDT_xgb_model.onnx")
 
 # get model metadata to enable mapping of new input to the runtime model.
 input_name = sess.get_inputs()[0].name

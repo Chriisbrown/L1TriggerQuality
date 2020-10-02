@@ -55,8 +55,8 @@ private:
   std::string outputname;
 
   const edm::EDGetTokenT< std::vector< TrackingParticle > > TrackingParticleToken_;
-  //const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
-  const edm::EDGetTokenT< TkPrimaryVertexCollection > TrackingVertexToken_;
+  const edm::EDGetTokenT< std::vector< TrackingVertex > > TrackingVertexToken_;
+  //const edm::EDGetTokenT< TkPrimaryVertexCollection > TrackingVertexToken_;
 };
 
 ///////////////

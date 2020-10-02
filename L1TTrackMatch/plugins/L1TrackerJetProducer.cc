@@ -177,12 +177,14 @@ void L1TrackerJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
   unsigned int this_l1track = 0;
   for ( iterL1Track = TTTrackHandle->begin(); iterL1Track != TTTrackHandle->end(); iterL1Track++ ) {
     ++this_l1track;
+
+    if(fabs(iterL1Track->POCA().z())>TRK_ZMAX)continue;
+    if(fabs(iterL1Track->momentum().eta())>TRK_ETAMAX)continue;
+    if(iterL1Track->momentum().perp()<TRK_PTMIN)continue;
     
     if (Purity_cut) {
 
-      if(fabs(iterL1Track->POCA().z())>TRK_ZMAX)continue;
-      if(fabs(iterL1Track->momentum().eta())>TRK_ETAMAX)continue;
-      if(iterL1Track->momentum().perp()<TRK_PTMIN)continue;
+      
       std::vector< edm::Ref< edmNew::DetSetVector< TTStub< Ref_Phase2TrackerDigi_ > >, TTStub< Ref_Phase2TrackerDigi_ > > >  theStubs = iterL1Track -> getStubRefs() ;	    if(theStubs.size()<TRK_NSTUBMIN)continue;
       float chi2ndof=(iterL1Track->chi2()/(2*theStubs.size() - L1Tk_nPar));
       if(chi2ndof>TRK_CHI2MAX)continue;

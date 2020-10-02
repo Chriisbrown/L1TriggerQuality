@@ -36,6 +36,7 @@
 <use   name="boost"/>
 <use   name="root"/>
 <use   name="rootrflx"/>
+<use   name="PhysicsTools/ONNXRuntime"/>
 <use   name="DataFormats/L1TrackTrigger"/>
 <!-- Add no-misleading-indentation option to avoid warnings about bug in Boost library. -->
 <flags CXXFLAGS="-g -Wno-unused-variable -Wno-misleading-indentation -Wno-maybe-uninitialized"/>
