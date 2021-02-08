@@ -23,38 +23,43 @@ namespace L1Analysis
       GenMet =0;
       GenMetPhi = 0;
       GenSumEt = 0;
-      TrkMet = 0;
-      TrkMetPhi = 0;
-      TrkSumEt = 0;
-      CutTrkMet = 0;
-      CutTrkMetPhi = 0;
-      CutTrkSumEt = 0;
-      MVATrkMet = 0;
-      MVATrkMetPhi = 0;
-      MVATrkSumEt = 0;
-      SimTrkMet = 0;
-      SimTrkMetPhi = 0;
-      SimTrkSumEt = 0;
+      Trk2Met = 0;
+      Trk2MetPhi = 0;
+      Trk2SumEt = 0;
+      Trk3Met = 0;
+      Trk3MetPhi = 0;
+      Trk3SumEt = 0;
+      Trk10Met = 0;
+      Trk10MetPhi = 0;
+      Trk10SumEt = 0;
+      Trk100Met = 0;
+      Trk100MetPhi = 0;
+      Trk100SumEt = 0;
     }
 
     double GenMet;
     double GenMetPhi;
     double GenSumEt;
-    double TrkSumEt;
-    double TrkMet;
-    double TrkMetPhi;
     
-    double CutTrkMet;
-    double CutTrkMetPhi;
-    double CutTrkSumEt;
-    double MVATrkMet;
-    double MVATrkMetPhi;
-    double MVATrkSumEt;
-    double SimTrkMet;
-    double SimTrkMetPhi;
-    double SimTrkSumEt;
+    double Trk2SumEt;
+    double Trk2Met;
+    double Trk2MetPhi;
+    
+    double Trk3SumEt;
+    double Trk3Met;
+    double Trk3MetPhi;
+    
+    double Trk10SumEt;
+    double Trk10Met;
+    double Trk10MetPhi;
+    
+    double Trk100SumEt;
+    double Trk100Met;
+    double Trk100MetPhi;
+    
+    
+    
 
   }; 
 }
 #endif
-
